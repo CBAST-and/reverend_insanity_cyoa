@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverend Insanity CYOA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Reverend Insanity CYOA</h1>
+            <p class="subtitle">Shape your destiny in the Gu World</p>
+        </header>
+
+        <!-- Mode Selection (shown first) -->
+        <section id="mode-selection" class="mode-selection">
+            <h2>Select Your Difficulty</h2>
+            <div class="mode-grid">
+                <div class="mode-card" data-mode="venerable" data-points="10000">
+                    <h3>Venerable</h3>
+                    <p class="points">10,000 CP</p>
+                    <p class="description">God mode - Experience ultimate power</p>
+                </div>
+                <div class="mode-card" data-mode="easy" data-points="2500">
+                    <h3>Easy</h3>
+                    <p class="points">2,500 CP</p>
+                    <p class="description">Favorable start with extra resources</p>
+                </div>
+                <div class="mode-card" data-mode="normal" data-points="1000">
+                    <h3>Normal</h3>
+                    <p class="points">1,000 CP</p>
+                    <p class="description">Balanced challenge</p>
+                </div>
+                <div class="mode-card" data-mode="hard" data-points="500">
+                    <h3>Hard</h3>
+                    <p class="points">500 CP</p>
+                    <p class="description">Brutal difficulty for veterans</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Points Display (hidden until mode selected) -->
+        <div id="points-display" class="points-display" style="display: none;">
+            <div class="points-info">
+                <span class="label">Available Points:</span>
+                <span id="current-points" class="value">1000</span>
+            </div>
+            <div class="points-info">
+                <span class="label">Starting Points:</span>
+                <span id="starting-points" class="value">1000</span>
+            </div>
+        </div>
+
+        <!-- Main CYOA Content (hidden until mode selected) -->
+        <main id="cyoa-content" style="display: none;">
+            
+            <!-- Timeline Section -->
+            <section class="category">
+                <h2 class="category-title">Timeline</h2>
+                <p class="category-description">Choose when you enter the Gu world</p>
+                <div class="options-grid" data-category="timeline" data-type="single">
+                    <div class="option-card" data-id="timeline-first" data-cost="150">
+                        <h3>First Timeline</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">Born November 11th, same time as Fang Yuan. Spectral Soul succeeds, Spring Autumn Cicada never refined. Fang Yuan becomes a demonic powerhouse with blood deity.</p>
+                    </div>
+                    <div class="option-card" data-id="timeline-second" data-cost="0">
+                        <h3>Second Timeline (Canon)</h3>
+                        <p class="cost">Free</p>
+                        <p class="description">Born same time as Fang Yuan's first life. His will travels 500 years back before awakening ceremony. Heaven's will protects him from lethal attempts.</p>
+                    </div>
+                    <div class="option-card" data-id="timeline-alternative" data-cost="300">
+                        <h3>Alternative Timeline</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">You ARE Fang Yuan - he never transmigrates. No Spring Autumn Cicada, but all other benefits. Skip race, location, appearance. Will Spectral Soul dominate? Will you destroy Fate Gu?</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Extra Prep Time -->
+            <section class="category">
+                <h2 class="category-title">Extra Preparation</h2>
+                <div class="options-grid" data-category="prep" data-type="single">
+                    <div class="option-card" data-id="prep-extra" data-cost="-50">
+                        <h3>Extra Prep Time</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Additional 20 years of preparation time (not available for Alternative Timeline)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Innate Traits -->
+            <section class="category">
+                <h2 class="category-title">Innate Traits</h2>
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Race</h3>
+                    <div class="options-grid" data-category="race" data-type="single">
+                        <div class="option-card" data-id="race-random" data-cost="300">
+                            <h3>Random Race</h3>
+                            <p class="cost">+300 CP</p>
+                            <p class="description">Born as random race - variant or normal human. All up to luck.</p>
+                        </div>
+                        <div class="option-card" data-id="race-variant" data-cost="150">
+                            <h3>Variant Human</h3>
+                            <p class="cost">+150 CP</p>
+                            <p class="description">Choose any variant human. If dragonman, you start your own bloodline as ancestor, immune to Duke Long's extermination move.</p>
+                        </div>
+                        <div class="option-card" data-id="race-human" data-cost="0">
+                            <h3>Human</h3>
+                            <p class="cost">Free</p>
+                            <p class="description">Safe choice. Though nothing is truly safe in the Gu world.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Sex</h3>
+                    <div class="options-grid" data-category="sex" data-type="single">
+                        <div class="option-card" data-id="sex-choice" data-cost="0">
+                            <h3>Choose Sex</h3>
+                            <p class="cost">Free</p>
+                            <p class="description">Choose which sex you are born as.</p>
+                        </div>
+                        <div class="option-card" data-id="sex-random" data-cost="50">
+                            <h3>Random Sex</h3>
+                            <p class="cost">+50 CP</p>
+                            <p class="description">Randomly determined.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Appearance</h3>
+                    <div class="options-grid" data-category="appearance" data-type="single">
+                        <div class="option-card" data-id="appear-ugly" data-cost="50">
+                            <h3>Extremely Unattractive</h3>
+                            <p class="cost">+50 CP</p>
+                            <p class="description">Extremely ugly appearance - enough to ruin someone's day.</p>
+                        </div>
+                        <div class="option-card" data-id="appear-average" data-cost="0">
+                            <h3>Average Appearance</h3>
+                            <p class="cost">Free</p>
+                            <p class="description">Extremely average appearance.</p>
+                        </div>
+                        <div class="option-card" data-id="appear-attractive" data-cost="-50">
+                            <h3>Extremely Attractive</h3>
+                            <p class="cost">-50 CP</p>
+                            <p class="description">Extremely attractive - people subconsciously treat you better.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Special Traits</h3>
+                    <div class="options-grid" data-category="special-traits" data-type="multiple">
+                        <div class="option-card" data-id="trait-memory" data-cost="-50">
+                            <h3>Eidetic Memory</h3>
+                            <p class="cost">-50 CP</p>
+                            <p class="description">Perfect memory. Can forget if desired. Natural human path Dao marks imitating wisdom path.</p>
+                        </div>
+                        <div class="option-card" data-id="trait-strength" data-cost="-50">
+                            <h3>Innate Strength</h3>
+                            <p class="cost">-50 CP</p>
+                            <p class="description">Break fingers as baby, strength of many men as adult. Human path Dao marks imitating strength path.</p>
+                        </div>
+                        <div class="option-card" data-id="trait-transhuman" data-cost="-200">
+                            <h3>Transhumanist</h3>
+                            <p class="cost">-200 CP</p>
+                            <p class="description">Human Path Dao Marks inscribe into you. Cannot lose sense of self or humanity. Extreme mental resistance. Enables permanent beast transformation, dream realm immersion, etc.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Location -->
+            <section class="category">
+                <h2 class="category-title">Location & Status</h2>
+                <p class="category-description">Choose your birthplace and social standing</p>
+                
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Clan Tier</h3>
+                    <div class="options-grid" data-category="clan-tier" data-type="single">
+                        <div class="option-card" data-id="clan-mortal" data-cost="150">
+                            <h3>Mortal Village</h3>
+                            <p class="cost">+150 CP</p>
+                            <p class="description">You and one parent are the only Gu masters.</p>
+                        </div>
+                        <div class="option-card" data-id="clan-mid" data-cost="50">
+                            <h3>Mid-tier Clan</h3>
+                            <p class="cost">+50 CP</p>
+                            <p class="description">Respectable clan with resources.</p>
+                        </div>
+                        <div class="option-card" data-id="clan-high" data-cost="-50">
+                            <h3>High-tier Clan</h3>
+                            <p class="cost">-50 CP</p>
+                            <p class="description">Powerful clan with significant influence.</p>
+                        </div>
+                        <div class="option-card" data-id="clan-super" data-cost="-100">
+                            <h3>Super Clan</h3>
+                            <p class="cost">-100 CP</p>
+                            <p class="description">One of the dominant forces in the region.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Clan Status</h3>
+                    <p class="info-text">Status options depend on clan tier selected</p>
+                    <div id="status-options" class="options-grid" data-category="status" data-type="single">
+                        <!-- Dynamically populated based on clan tier -->
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Special Birth</h3>
+                    <div class="options-grid" data-category="special-birth" data-type="single">
+                        <div class="option-card" data-id="birth-custom-immortal" data-cost="-400">
+                            <h3>Customized Child of Immortal Expert</h3>
+                            <p class="cost">-400 CP</p>
+                            <p class="description">Singular offspring of two rank 6 Immortals. Design their personalities, choose location/clan. Each has rank 6 immortal gu and grandmaster attainment.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Aptitude -->
+            <section class="category">
+                <h2 class="category-title">Aptitude</h2>
+                <p class="category-description">Your cultivation talent - dictates mortal life trajectory</p>
+                <div class="options-grid" data-category="aptitude" data-type="single">
+                    <div class="option-card" data-id="apt-random" data-cost="150">
+                        <h3>Random Aptitude</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">Roll the dice on your talent.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-d" data-cost="50">
+                        <h3>D-Grade (20%-39%)</h3>
+                        <p class="cost">+50 CP</p>
+                        <p class="description">Poor aptitude.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-c" data-cost="0">
+                        <h3>C-Grade (40%-59%)</h3>
+                        <p class="cost">Free</p>
+                        <p class="description">Average aptitude.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-b" data-cost="-50">
+                        <h3>B-Grade (60%-79%)</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Above average aptitude.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-a" data-cost="-100">
+                        <h3>A-Grade (80%-99%)</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Exceptional aptitude.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-extreme" data-cost="-150">
+                        <h3>Ten Extreme Physique</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Choose your physique. 2x attainment growth in its path.</p>
+                    </div>
+                    <div class="option-card" data-id="apt-custom" data-cost="-250">
+                        <h3>Custom Extreme Physique</h3>
+                        <p class="cost">-250 CP</p>
+                        <p class="description">Choose two paths (not Heaven). Innately connected with Dao Marks. 2x attainment growth in both paths.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Luck -->
+            <section class="category">
+                <h2 class="category-title">Luck</h2>
+                <p class="category-description">Lifelong, near-immutable luck modifications (only peak rank 8 can alter)</p>
+                <div class="options-grid" data-category="luck" data-type="multiple">
+                    <div class="option-card negative" data-id="luck-nemesis" data-cost="250">
+                        <h3>Nemesis Luck</h3>
+                        <p class="cost">+250 CP</p>
+                        <p class="description">At each rank, find mortal enemy. Unusually strong for their rank. New nemesis appears after killing or surpassing by whole rank (1 year delay).</p>
+                    </div>
+                    <div class="option-card negative" data-id="luck-horizon" data-cost="200">
+                        <h3>Horizon Graveyard Luck</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">Everyone around you suffers falling luck. Allies, family - all eventually doomed.</p>
+                    </div>
+                    <div class="option-card positive" data-id="luck-peach" data-cost="-50">
+                        <h3>Peach-blossom Luck</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Very good luck with opposite sex. More receptive to advances, prepared to help. Less effective on higher ranks but still noticeable.</p>
+                    </div>
+                    <div class="option-card positive" data-id="luck-platinum" data-cost="-100">
+                        <h3>Platinum Luck</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Stumble upon commercial opportunities, especially auctions. Buy low, sell high.</p>
+                    </div>
+                    <div class="option-card positive" data-id="luck-dogshit" data-cost="-200">
+                        <h3>Dog Shit Luck</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Greatly improved luck, as if by rank 6 Dog Shit Luck.</p>
+                    </div>
+                    <div class="option-card positive" data-id="luck-fortune" data-cost="-400">
+                        <h3>Fortune Rivalling Heaven</h3>
+                        <p class="cost">-400 CP</p>
+                        <p class="description">Ma Hong Yun tier fortune. Natural understanding of luck, 2x attainment growth in luck path.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Soul -->
+            <section class="category">
+                <h2 class="category-title">Soul Foundation</h2>
+                <p class="category-description">Must buy each lower level to get specific foundation. Body gains necessary Dao marks.</p>
+                <div class="options-grid" data-category="soul" data-type="multiple">
+                    <div class="option-card" data-id="soul-10k" data-cost="-50">
+                        <h3>Ten Thousand Man Soul</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Rank 5 expert soul. Super force clan leader with resources: 30 years normally, 20 with special methods.</p>
+                    </div>
+                    <div class="option-card" data-id="soul-100k" data-cost="-100" data-requires="soul-10k">
+                        <h3>Hundred Thousand Man Soul</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Rank 6 immortal who spent great effort strengthening soul. Requires Ten Thousand Man Soul.</p>
+                    </div>
+                    <div class="option-card" data-id="soul-1m" data-cost="-100" data-requires="soul-100k">
+                        <h3>One Million Man Soul</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Great expert in soul-benefiting paths (refinement, wisdom, enslavement). Higher causes detrimental Dao mark interference. Requires Hundred Thousand Man Soul.</p>
+                    </div>
+                    <div class="option-card" data-id="soul-10m" data-cost="-100" data-requires="soul-1m">
+                        <h3>Ten Million Man Soul</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Soul path immortal level. Dao mark interference detrimental to other paths unless bypassed. Natural understanding, 2x soul path attainment growth. Requires One Million Man Soul.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attainment -->
+            <section class="category">
+                <h2 class="category-title">Attainment</h2>
+                <p class="category-description">Path expertise gained through practice. Grandmaster: max 4 paths. Great Grandmaster: max 2 paths.</p>
+                
+                <div class="attainment-builder">
+                    <div class="attainment-controls">
+                        <label>Select Path:</label>
+                        <select id="attainment-path-select">
+                            <option value="">-- Choose Path --</option>
+                            <option value="strength">Strength</option>
+                            <option value="transformation">Transformation</option>
+                            <option value="qi">Qi</option>
+                            <option value="blood">Blood</option>
+                            <option value="flesh">Flesh</option>
+                            <option value="bone">Bone</option>
+                            <option value="refinement">Refinement</option>
+                            <option value="enslavement">Enslavement</option>
+                            <option value="soul">Soul</option>
+                            <option value="wisdom">Wisdom</option>
+                            <option value="luck">Luck</option>
+                            <option value="space">Space</option>
+                            <option value="time">Time</option>
+                            <option value="sword">Sword</option>
+                            <option value="saber">Saber</option>
+                            <option value="metal">Metal</option>
+                            <option value="wood">Wood</option>
+                            <option value="water">Water</option>
+                            <option value="fire">Fire</option>
+                            <option value="earth">Earth</option>
+                            <option value="ice">Ice</option>
+                            <option value="lightning">Lightning</option>
+                            <option value="wind">Wind</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="sound">Sound</option>
+                            <option value="poison">Poison</option>
+                            <option value="food">Food</option>
+                            <option value="rule">Rule</option>
+                            <option value="formation">Formation</option>
+                            <option value="information">Information</option>
+                            <option value="human">Human</option>
+                            <option value="dream">Dream</option>
+                            <option value="theft">Theft</option>
+                        </select>
+                        <button id="add-master-btn" class="attain-btn" data-level="master" data-cost="-50">Add Master (-50 CP)</button>
+                        <button id="add-grandmaster-btn" class="attain-btn" data-level="grandmaster" data-cost="-100">Add Grandmaster (-100 CP)</button>
+                        <button id="add-greatgm-btn" class="attain-btn" data-level="greatgrandmaster" data-cost="-200">Add Great GM (-200 CP)</button>
+                    </div>
+                    <div id="attainment-list" class="attainment-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <div class="attainment-info">
+                        <p><strong>Master:</strong> Decades to achieve. Uncanny intuition. Unlimited purchases.</p>
+                        <p><strong>Grandmaster:</strong> Once-in-century genius level. Mimic other paths, create immortal killer moves with immortal materials. High-grade blessed land human Qi. <strong>Max 4 paths.</strong></p>
+                        <p><strong>Great Grandmaster:</strong> Rank 8 expert level. Easily create new mortal Gu recipes. Utilize natural Dao marks. <strong>Max 2 paths.</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grab Bag -->
+            <section class="category">
+                <h2 class="category-title">Grab Bag Perks</h2>
+                <p class="category-description">Minor but useful perks bundled together</p>
+                
+                <div class="grab-bag-bundles">
+                    <div class="options-grid" data-category="grab-bag-bundle" data-type="single">
+                        <div class="option-card" data-id="grab-3" data-cost="-50">
+                            <h3>3 Grab Bag Perks</h3>
+                            <p class="cost">-50 CP</p>
+                        </div>
+                        <div class="option-card" data-id="grab-5" data-cost="-100">
+                            <h3>5 Grab Bag Perks</h3>
+                            <p class="cost">-100 CP</p>
+                        </div>
+                        <div class="option-card" data-id="grab-7" data-cost="-150">
+                            <h3>7 Grab Bag Perks</h3>
+                            <p class="cost">-150 CP</p>
+                        </div>
+                        <div class="option-card" data-id="grab-10" data-cost="-200">
+                            <h3>10 Grab Bag Perks</h3>
+                            <p class="cost">-200 CP</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="grab-bag-selection" class="grab-bag-selection" style="display: none;">
+                    <h3>Select Your Perks (<span id="grab-selected">0</span>/<span id="grab-max">0</span>)</h3>
+                    <div class="grab-bag-grid">
+                        <div class="grab-item" data-id="grab-reading">
+                            <h4>Reading Materials</h4>
+                            <p>Popup window with Reverend Insanity novel and wiki. Only you can read it.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-professor">
+                            <h4>Gu Professor</h4>
+                            <p>Always know if an immortal Gu exists or not.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-polyglot">
+                            <h4>Polyglot</h4>
+                            <p>Speak and read every region's language.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-1ksoul">
+                            <h4>Thousand Man Soul</h4>
+                            <p>Born with 1,000 man soul. Control 100,000+ beasts with enslavement. Beat all but rank 5 in soul battles.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-otherworld">
+                            <h4>Otherworldly Dao</h4>
+                            <p>Choose which otherworldly Dao mark your soul comes with.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-settra">
+                            <h4>Settra</h4>
+                            <p>Slavery Gu (any rank) does not work on you.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-changewill">
+                            <h4>Change Will</h4>
+                            <p>Change an ideal of yourself to better fit Gu world.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-memories">
+                            <h4>Memories</h4>
+                            <p>Before birth, gain memories of mortal whole life uninvolved with Gu Masters.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-instant">
+                            <h4>Instant Success</h4>
+                            <p>Dao-marking Gu (Black Boar, Iron Bone, etc.) show full effects immediately and painlessly, no primeval essence needed to activate.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-mutated">
+                            <h4>Mutated Soul</h4>
+                            <p>Choose mutated soul type (e.g., wolfman soul - stronger controlling wolves).</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-flying">
+                            <h4>Flying Master</h4>
+                            <p>Master-level attainment in flying.</p>
+                        </div>
+                        <div class="grab-item" data-id="grab-secret">
+                            <h4>Secret Manuals</h4>
+                            <p>3 secret manuals for non-aperture cultivation (minor compared to Gu cultivation).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perks Tier 1 -->
+            <section class="category">
+                <h2 class="category-title">Tier 1 Perks</h2>
+                <div class="options-grid" data-category="tier1" data-type="multiple">
+                    <div class="option-card repeatable" data-id="tier1-wealth" data-cost="-50">
+                        <h3>Primeval Wealth</h3>
+                        <p class="cost">-50 CP (Repeatable)</p>
+                        <p class="description">Rank 4 Primeval Elder Gu with 10 million primeval stones. Equivalent to mid-sized clan wealth.</p>
+                    </div>
+                    <div class="option-card repeatable" data-id="tier1-guset" data-cost="-50">
+                        <h3>Gu Set</h3>
+                        <p class="cost">-50 CP (Repeatable)</p>
+                        <p class="description">Choose 10 Gu worms of same path (rank 1-5). Manifest in aperture. Instantly refinable to higher ranks up to rank 5.</p>
+                    </div>
+                    <div class="option-card" data-id="tier1-combat" data-cost="-50">
+                        <h3>Close Combat Master</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Battle genius. Mastered Krav Maga, Boxing, BJJ, Grappling, Muay Thai. Master proficiency: longsword, rapier, axe, polearm.</p>
+                    </div>
+                    <div class="option-card repeatable" data-id="tier1-recipes" data-cost="-50">
+                        <h3>Mortal Recipes</h3>
+                        <p class="cost">-50 CP (Repeatable)</p>
+                        <p class="description">Select 10 mortal Gu, gain rank 1-5 recipes. Uses modern materials.</p>
+                    </div>
+                    <div class="option-card" data-id="tier1-inhuman" data-cost="-50">
+                        <h3>Inhuman Transformations</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">When transforming to beastly form, automatically control body as if born in that form.</p>
+                    </div>
+                    <div class="option-card" data-id="tier1-flyinggm" data-cost="-50">
+                        <h3>Flying Grandmaster</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Grandmaster flying proficiency. Even renowned geniuses achieve quasi-grandmaster at most.</p>
+                    </div>
+                    <div class="option-card" data-id="tier1-longevity" data-cost="-50">
+                        <h3>Longevity</h3>
+                        <p class="cost">-50 CP</p>
+                        <p class="description">Hundred-year lifespan Gu. Extend lifespan or reserve for other purposes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perks Tier 2 -->
+            <section class="category">
+                <h2 class="category-title">Tier 2 Perks</h2>
+                <div class="options-grid" data-category="tier2" data-type="multiple">
+                    <div class="option-card" data-id="tier2-dualdao" data-cost="-100">
+                        <h3>Dual Dao</h3>
+                        <p class="cost">-100 CP (-50 CP with Custom Extreme Physique)</p>
+                        <p class="description">Choose two paths - they don't interfere with each other.</p>
+                    </div>
+                    <div class="option-card" data-id="tier2-variantdao" data-cost="-100">
+                        <h3>Variant Dao</h3>
+                        <p class="cost">-100 CP (Requires variant human)</p>
+                        <p class="description">Great grandmaster in race's path (dragonman→enslavement, etc.). Doesn't count toward limit. 2x attainment growth.</p>
+                    </div>
+                    <div class="option-card" data-id="tier2-secondap" data-cost="-100">
+                        <h3>Second Aperture</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Awaken second aperture when chosen. Functions as rank 6 Second Aperture Gu - no rank restriction.</p>
+                    </div>
+                    <div class="option-card repeatable" data-id="tier2-superguset" data-cost="-100">
+                        <h3>Superior Gu Set</h3>
+                        <p class="cost">-100 CP (Max 2)</p>
+                        <p class="description">Pick 10 Gu worms (up to rank 5). Never need feeding. Instantly refinable to higher ranks.</p>
+                    </div>
+                    <div class="option-card" data-id="tier2-immortalrecipes" data-cost="-100">
+                        <h3>Immortal Recipes</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Choose 10 Gu worms. Obtain rank 1-9 recipes for each. Uses current era materials (exotic/extinct but existing allowed for high ranks).</p>
+                    </div>
+                    <div class="option-card repeatable" data-id="tier2-borndao" data-cost="-100">
+                        <h3>Born Dao</h3>
+                        <p class="cost">-100 CP (Once per path)</p>
+                        <p class="description">Born with 50 Dao Marks in chosen path. Body modified to withstand.</p>
+                    </div>
+                    <div class="option-card" data-id="tier2-experience" data-cost="-100">
+                        <h3>Experience</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Before birth, experience random Gu master's life (demonic/righteous/lone - your choice). Ends after reaching rank 6 and dying. Alternative timeline: experience Fang Yuan's first life.</p>
+                    </div>
+                    <div class="option-card repeatable" data-id="tier2-growth" data-cost="-100">
+                        <h3>Growth</h3>
+                        <p class="cost">-100 CP (Once per path)</p>
+                        <p class="description">Choose path. 2x attainment growth in it.</p>
+                    </div>
+                    <div class="option-card" data-id="tier2-greatlove" data-cost="-100">
+                        <h3>Great Love</h3>
+                        <p class="cost">-100 CP</p>
+                        <p class="description">Grandmaster in social manipulation, reading people, manipulating agreements, expressing false sincerity.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perks Tier 3 -->
+            <section class="category">
+                <h2 class="category-title">Tier 3 Perks</h2>
+                <div class="options-grid" data-category="tier3" data-type="multiple">
+                    <div class="option-card" data-id="tier3-vitalgu" data-cost="-150">
+                        <h3>Vital Gu</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Vital Gu + 2 others guaranteed to advance to rank 6. Can refine additional rank 6 immortal Gu for each great grandmaster path.</p>
+                    </div>
+                    <div class="option-card" data-id="tier3-inheritance" data-cost="-150">
+                        <h3>Great Era Inheritance</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Rank 6 immortal inheritance (rank 1 to peak rank 6). 500 years ahead - great era path like weapon/pill/etc. Includes advanced Gu recipes and killer moves.</p>
+                    </div>
+                    <div class="option-card" data-id="tier3-reinforced" data-cost="-150">
+                        <h3>Reinforced Physique</h3>
+                        <p class="cost">-150 CP (Requires extreme physique)</p>
+                        <p class="description">No downsides from extreme physique. Ascension on high end of normal - relatively tame. Afterwards Heaven's Will won't hold back.</p>
+                    </div>
+                    <div class="option-card" data-id="tier3-autobalance" data-cost="-150">
+                        <h3>Auto Balancer</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Heaven, Earth, Human Qi automatically balanced during immortal ascension. Guaranteed pass.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perks Tier 4 -->
+            <section class="category">
+                <h2 class="category-title">Tier 4 Perks</h2>
+                <div class="options-grid" data-category="tier4" data-type="multiple">
+                    <div class="option-card" data-id="tier4-clone" data-cost="-250">
+                        <h3>Clone</h3>
+                        <p class="cost">-250 CP</p>
+                        <p class="description">After aperture awakening, create clone anytime. Choose if clone shares perks/attainment.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-servant" data-cost="-250">
+                        <h3>Servant of Heaven</h3>
+                        <p class="cost">-250 CP</p>
+                        <p class="description">Heaven's Will ally. Fortuitous encounters more likely, easier tribulations. 2x heaven attainment growth. Lose power if betray Heaven.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-hidden" data-cost="-200">
+                        <h3>Hidden Danger</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">At will: suppress aura to nothing or pretend multiple ranks lower. Killer moves won't reveal aura if concealed.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-lifedeath" data-cost="-200">
+                        <h3>Life and Death Aperture</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Upon immortal ascension, gain life-death aperture. Half-strength tribulations, same Dao marks. Guaranteed high-grade blessed land (super-grade with extreme physique).</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-daocarver" data-cost="-300">
+                        <h3>Dao Carver</h3>
+                        <p class="cost">-300 CP</p>
+                        <p class="description">2x Dao marks from any source. Heaven's Will ignores this for tribulations. Peak rank 8 or pseudo-venerable prospects.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-antidiv" data-cost="-300">
+                        <h3>Anti-Divination</h3>
+                        <p class="cost">-300 CP</p>
+                        <p class="description">Rank 9 perpetual killer move (choose path). Only rank 9 wisdom path with rank 9 Gu can deduce you. Deductions fail or obfuscated. Toggleable.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-rank8inherit" data-cost="-250">
+                        <h3>Rank 8 Inheritance</h3>
+                        <p class="cost">-250 CP</p>
+                        <p class="description">Rank 8 inheritance (1-2 paths, not heaven). Optional great era. Choose 2 specializations (4 if single path). Peak mortal killer moves, immortal versions. No Gu worms included. Smooth cultivation start to finish.</p>
+                    </div>
+                    <div class="option-card" data-id="tier4-pocket" data-cost="-300">
+                        <h3>Pocket Paradise</h3>
+                        <p class="cost">-300 CP</p>
+                        <p class="description">Portable blessed land orb (7,000m², 40x time). Choose path. Controlled land spirit, 50 immortal essence stones/year. No tribulations. Movable between regions.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perks Tier 5 -->
+            <section class="category">
+                <h2 class="category-title">Tier 5 Perks</h2>
+                <p class="category-description">Each additional Tier 5 perk after first costs +200 CP extra</p>
+                <div class="options-grid" data-category="tier5" data-type="multiple">
+                    <div class="option-card" data-id="tier5-dreamven" data-cost="-150">
+                        <h3>Small Dream Immortal Venerable</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Master attainment in every path. Uncanny intuitions about Gu world. No restrictions on grandmaster/great grandmaster purchases. Attainment cost halved.</p>
+                    </div>
+                    <div class="option-card" data-id="tier5-maps" data-cost="-200">
+                        <h3>Gu Maps</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Perfect map of entire Gu world in head (projectable 3D hologram). Resources, inheritances, blessed lands, demographics, infrastructure, beast territory. Updates yearly.</p>
+                    </div>
+                    <div class="option-card" data-id="tier5-prodigy" data-cost="-200">
+                        <h3>Prodigy</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Choose path: great grandmaster attainment, 4x attainment growth, talent to reach supreme grandmaster naturally. Doesn't count toward limit.</p>
+                    </div>
+                    <div class="option-card" data-id="tier5-legendary" data-cost="-350">
+                        <h3>Legendary Expert</h3>
+                        <p class="cost">-350 CP</p>
+                        <p class="description">Quasi-supreme grandmaster in chosen path. Undisputed expert alive today. Still need great effort to reach supreme grandmaster.</p>
+                    </div>
+                    <div class="option-card" data-id="tier5-vitalext" data-cost="-150">
+                        <h3>Vital Gu Extension</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Choose any Gu (except SAC). Becomes additional Vital Gu. Accompanies soul, manifests at rank 1. Advances to rank 9 automatically.</p>
+                    </div>
+                    <div class="option-card" data-id="tier5-pathfounder" data-cost="-200">
+                        <h3>Path Founder</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Create own path. Start at master, 2x attainment growth, supreme grandmaster potential. Hard to counter but not dream-path utility. Must have origin, 2 strengths, 1 weakness.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Venerable Inheritances -->
+            <section class="category">
+                <h2 class="category-title">Venerable Inheritances</h2>
+                <p class="category-description">May only choose ONE venerable inheritance</p>
+                <div class="options-grid" data-category="venerable" data-type="single">
+                    <div class="option-card" data-id="ven-primordial" data-cost="-350">
+                        <h3>Primordial Origin</h3>
+                        <p class="cost">-350 CP</p>
+                        <p class="description">Base lifespan x10. Life-extension methods 2x effectiveness. Immune to lifespan drain.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-star" data-cost="-500">
+                        <h3>Star Constellation</h3>
+                        <p class="cost">-500 CP</p>
+                        <p class="description">All attainment gains x2. Mental energy costs halved.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-limitless" data-cost="-300">
+                        <h3>Limitless</h3>
+                        <p class="cost">-300 CP</p>
+                        <p class="description">3x Dao marks from any source (stacks with Dao Carver). Heaven's Will ignores for tribulations.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-reckless" data-cost="-400">
+                        <h3>Reckless Savage</h3>
+                        <p class="cost">-400 CP</p>
+                        <p class="description">Transfer true meaning to/from others at will. Force 'consent', take attainments from captured souls (slowly from prisoners). Only gain if they have more than you.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-genesis" data-cost="-200">
+                        <h3>Genesis Lotus</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Store primeval/immortal essence in aperture 'bank'. Easier mortal cultivation. 10% annual interest (aperture world time).</p>
+                    </div>
+                    <div class="option-card" data-id="ven-thieving" data-cost="-400">
+                        <h3>Thieving Heaven</h3>
+                        <p class="cost">-400 CP</p>
+                        <p class="description">Complete venerable inheritance (Triple Qi Retraction/Star Constellation Chessboard/Heaven-Earth Luck). Associated immortal Gu at rank 6. Disrupts canon. Unpredictable consequences.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-redlotus" data-cost="-250">
+                        <h3>Red Lotus</h3>
+                        <p class="cost">-250 CP</p>
+                        <p class="description">One save slot. Upon death/activation, will travels back to designated point. Save slot disappears.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-giant" data-cost="-150">
+                        <h3>Giant Sun</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Receive all Luck category options for free.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-spectral" data-cost="-150">
+                        <h3>Spectral Soul</h3>
+                        <p class="cost">-150 CP</p>
+                        <p class="description">Unbreakable will to win. Ignore all pain, despair, negative emotions. Soul path reinforcement/growth/pacification effects 2x effective.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-paradise" data-cost="-500">
+                        <h3>Paradise Earth</h3>
+                        <p class="cost">-500 CP</p>
+                        <p class="description">Born with 250 unrestrained heavenly Dao Marks. Body modified to withstand.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-greatdream" data-cost="-200">
+                        <h3>Great Dream</h3>
+                        <p class="cost">-200 CP</p>
+                        <p class="description">Reach supreme grandmaster via dream realms. 2x dream path attainment gain.</p>
+                    </div>
+                    <div class="option-card" data-id="ven-heavenrefine" data-cost="-500">
+                        <h3>Heaven Refining</h3>
+                        <p class="cost">-500 CP</p>
+                        <p class="description">All your Dao marks are non-conflicting.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Premium Gu Worms -->
+            <section class="category">
+                <h2 class="category-title">Premium Gu Worms</h2>
+                <p class="category-description">Special Immortal Gu transcending Gu world limits. Venerable masterpieces. Great grandmaster attainment needed past rank 6. No feeding for 30 years. Fit mortal apertures. Cannot be chosen from other perks.</p>
+                <div class="options-grid" data-category="premium-gu" data-type="multiple">
+                    <div class="option-card" data-id="premium-breakdream" data-cost="-150">
+                        <h3>Break Dream</h3>
+                        <p class="cost">-150 CP (Dream Path)</p>
+                        <p class="description">Destroys dream realms, counters dream path entities. Ideal vs dream path moves, tribulations, enemies hiding in dream realms.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-mastergu" data-cost="-250">
+                        <h3>Master of Gu</h3>
+                        <p class="cost">-250 CP (Human Path)</p>
+                        <p class="description">Complete Reverend Insanity narrative including unwritten chapters/side stories. Carves human path Dao marks (scales with rank). Uses mental energy only.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-ptv" data-cost="-350">
+                        <h3>Path to Victory</h3>
+                        <p class="cost">-350 CP (Wisdom Path)</p>
+                        <p class="description">Create optimal step-by-step plans accounting for unknown factors. Rank 6 accounts for rank 6 entities and below. Uses mental energy/thoughts, not essence. Mortal-usable for smaller plans. Can brute-force immortal Gu recipes.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-tribulation" data-cost="-250">
+                        <h3>Tribulation</h3>
+                        <p class="cost">-250 CP (Heaven Path)</p>
+                        <p class="description">Causes random tribulations against targets (immortal/object/beast). Frequent use angers Heaven's Will, causing disfavor. Rank 6: earthly tribulations (5% heavenly). Rank 7: heavenly (5% grand). Target gains Dao marks if survives.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-chaos" data-cost="-200">
+                        <h3>Chaos Flame Gu</h3>
+                        <p class="cost">-200 CP (Fire/Human, Consumable)</p>
+                        <p class="description">Human path Dao Mark flame attached to soul. Summonable/manipulable weapon using mental/physical energy (not lifespan). Strength depends on body/soul. Nurtures body/soul when not manifested. Splittable to willing individuals (mortals included). Strengthening feeds back to original user.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-solvent" data-cost="-200">
+                        <h3>Universal Solvent Gu</h3>
+                        <p class="cost">-200 CP (Water/Refinement)</p>
+                        <p class="description">Creates refinement water. Materials placed inside stripped of Dao marks until saturated. Dao marks broken into pseudo-mark soup. Affects materials at Gu rank or below. Saturated water replaces equivalent Dao mark materials in refining.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-selfoppression" data-cost="-150">
+                        <h3>Self Oppression Gu</h3>
+                        <p class="cost">-150 CP (Enslavement)</p>
+                        <p class="description">Enslaved entities burden own souls with enslavement cost instead of you. Maintain control.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-centraltime" data-cost="-150">
+                        <h3>Heaven's on Central Time</h3>
+                        <p class="cost">-150 CP (Time, Consumable)</p>
+                        <p class="description">In immortal aperture, tribulation timing determined by central continent time instead of internal aperture time.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-mobileform" data-cost="-150">
+                        <h3>Mobile Formation Immortal Gu</h3>
+                        <p class="cost">-150 CP (Formation)</p>
+                        <p class="description">Adding to formation allows user to move formation freely.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-innatestrength" data-cost="-150">
+                        <h3>Innate Strength Immortal Gu</h3>
+                        <p class="cost">-150 CP (Strength/Transformation)</p>
+                        <p class="description">Gain innate strength of creature transformed into.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-humanstrength" data-cost="-100">
+                        <h3>Human Strength Gu</h3>
+                        <p class="cost">-100 CP (Human/Strength, Reusable)</p>
+                        <p class="description">Once used, Gu Master gains strength of 25 human men permanently.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-partial" data-cost="-150">
+                        <h3>Partial Transformation Immortal Gu</h3>
+                        <p class="cost">-150 CP (Transformation/Rule)</p>
+                        <p class="description">Combine best features from different creature transformations into one.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-humanvessel" data-cost="-200">
+                        <h3>Human Vessel Gu</h3>
+                        <p class="cost">-200 CP (Human, Reusable)</p>
+                        <p class="description">Once used, Gu Master better withstands Dao marks with reduced conflict between Dao marks.</p>
+                    </div>
+                    <div class="option-card" data-id="premium-danghun" data-cost="-200">
+                        <h3>Dang Hun Gu</h3>
+                        <p class="cost">-200 CP (Soul, Reusable)</p>
+                        <p class="description">Expends soul foundation to create Guts Gu (worse rate than Dang Hun Mountain). Uses soul foundation instead of primeval essence.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Missions -->
+            <section class="category">
+                <h2 class="category-title">Missions</h2>
+                <p class="category-description warning">Complete within 300 years of central continent time OR explode and die. Spectral Soul eats your soul. Heaven's Will foils rival methods. No escape. Choose wisely.</p>
+                <div class="options-grid" data-category="missions" data-type="multiple">
+                    <div class="option-card mission" data-id="mission-traditional" data-cost="100">
+                        <h3>Traditional</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Create inheritance and suitable inheritance ground with trials/requirements.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-paradise" data-cost="100">
+                        <h3>Paradise</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Enter Grotto-Heaven Blue Dragon Whale at least once.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-kill" data-cost="150">
+                        <h3>Problem? KILL!</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">Destroy a super force. Must make it cease to exist (don't have to kill all members).</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-founding" data-cost="150">
+                        <h3>Founding Ancestor</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">Create super force (clan/sect/other). Must nurture at least one immortal besides yourself.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-secluded" data-cost="200">
+                        <h3>Secluded Domain</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">Obtain and own secluded domain of heaven and earth for one month.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-supreme" data-cost="200">
+                        <h3>Supreme Inheritance</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">Obtain complete true inheritance of any venerable (Thieving Heaven's 3 refinements doesn't count, nor does perk).</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-homewrecker" data-cost="300">
+                        <h3>Homewrecker</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">Destroy 88 True Yang building with YOUR direct involvement. Fail if destroyed without you.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-heavenly" data-cost="600">
+                        <h3>Heavenly Court</h3>
+                        <p class="cost">+600 CP</p>
+                        <p class="description">Join Heavenly Court, loyally serve its interests. Do what's best for Heavenly Court (don't have to save Fate Gu).</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-david" data-cost="150">
+                        <h3>David and Goliath</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">As mortal: defeat cultivator 3 ranks above OR defeat rank 6 immortal. As immortal: defeat Gu Immortal one rank above.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-feng" data-cost="100">
+                        <h3>Eliminate Feng Jin Huang</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Personally kill Feng Jin Huang. Fail if killed without your direct involvement.</p>
+                    </div>
+                    <div class="option-card mission" data-id="mission-guardian" data-cost="100">
+                        <h3>Eliminate Dao Guardian</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Personally kill a Dao Guardian. Fail if killed without your direct involvement.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drawbacks -->
+            <section class="category">
+                <h2 class="category-title">Drawbacks</h2>
+                <p class="category-description warning">Cannot take same drawback twice. Drawbacks overwrite other character creator options.</p>
+                <div class="options-grid" data-category="drawbacks" data-type="multiple">
+                    <div class="option-card drawback" data-id="draw-nospoilers" data-cost="50">
+                        <h3>No Spoilers</h3>
+                        <p class="cost">+50 CP</p>
+                        <p class="description">Cannot share Reverend Insanity contents with anyone.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-daomono" data-cost="100">
+                        <h3>Dao Monogamous</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Other paths interfere 2x more with vital Gu path. Cannot pick with Dual Dao.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-unundead" data-cost="100">
+                        <h3>Un-undead</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Cannot become zombie. No fail-safe. Must pay price for Light of Wisdom.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-trueword" data-cost="100">
+                        <h3>True to Your Word</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Never break alliance agreements. Contract/alliance Dao marks never forcefully removable. Careful what you sign, insist on time limits.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-mistress" data-cost="150">
+                        <h3>Like a Mistress</h3>
+                        <p class="cost">+150 CP</p>
+                        <p class="description">Owned Gu worms need 3x food to be properly fed.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-halflife" data-cost="200">
+                        <h3>Halved Lifespan</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">Lifespan halved (human: 50 years). Life-extension methods only half effective.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-daodunce" data-cost="300">
+                        <h3>Dao Dunce</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">Cannot increase attainment beyond what you buy in character creator.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-indivisible" data-cost="300">
+                        <h3>Indivisible</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">Cannot create clones. Others cannot clone you either. May still create external wills.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-ofworld" data-cost="300">
+                        <h3>Of This World</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">Soul and body are of Gu world. Only memories from Earth. Lose otherworldly soul and Dao marks.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-truthbound" data-cost="250">
+                        <h3>Truthbound</h3>
+                        <p class="cost">+250 CP</p>
+                        <p class="description">Cannot knowingly lie. Cannot avoid answering questions (growing debilitating pain until answered). May be misleading/deceptive.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-defy" data-cost="250">
+                        <h3>Defy Reality</h3>
+                        <p class="cost">+250 CP</p>
+                        <p class="description">Cannot knowingly tell truth. With Truthbound: never speak/write/use Gu for words (no pain for lying). Use pictures/expressions/gestures.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-cliche" data-cost="100">
+                        <h3>Clichéd Daoist</h3>
+                        <p class="cost">+100 CP</p>
+                        <p class="description">Run into xianxia literary conventions (often subverted). Glance at jade beauty? Courting death! Ready for battle in restaurants.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-fangyuan" data-cost="100">
+                        <h3>Enemy - Fang Yuan</h3>
+                        <p class="cost">+100 CP (Second timeline only)</p>
+                        <p class="description">Fang Yuan knows your powers/exploits, plans to exploit you. Has venerable support. Complications if razing Gu Yue clan before birth (not impossible).</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-shadow" data-cost="200">
+                        <h3>Enemy – Shadow Sect</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">Shadow Sect tries to kill you after drawing attention or becoming immortal. Initially indirect (Zombie Alliance/Defy), escalates if powerful or compromising plans.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-heavenlycourt" data-cost="200">
+                        <h3>Enemy – Heavenly Court</h3>
+                        <p class="cost">+200 CP</p>
+                        <p class="description">After becoming immortal, Heavenly Court concludes you're enemy of Heaven's Will. Wisdom path experts track you, make calculated assassinations. Quick reaction if drawing attention.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-principled" data-cost="250">
+                        <h3>Principled Protagonist</h3>
+                        <p class="cost">+250 CP</p>
+                        <p class="description">Cannot take demonic actions (Gu World AND Earth view). No Geneva Convention violations. No sneak attacks.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-lone" data-cost="250">
+                        <h3>Lone Cultivator</h3>
+                        <p class="cost">+250 CP</p>
+                        <p class="description">Never ally with anyone longer than 24 hours (combat or cultivation). Can live with parents/lovers if no cultivation aid given/received.</p>
+                    </div>
+                    <div class="option-card drawback" data-id="draw-filial" data-cost="300">
+                        <h3>Filial Promise</h3>
+                        <p class="cost">+300 CP</p>
+                        <p class="description">May not attack human or variant human with intent to kill.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Summary Section -->
+            <section class="summary-section">
+                <h2>Character Summary</h2>
+                <button id="export-btn" class="export-btn">Export Build</button>
+                <button id="import-btn" class="import-btn">Import Build</button>
+                <button id="reset-btn" class="reset-btn">Reset All</button>
+                <div id="summary-content" class="summary-content">
+                    <!-- Dynamically populated -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
