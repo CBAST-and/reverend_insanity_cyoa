@@ -221,7 +221,7 @@ export const CYOA_DATA = {
         aptitude: {
             type: 'single',
             title: 'Aptitude',
-            description: 'Your cultivation talent - dictates mortal life trajectory',
+            description: "It's time to determine what dictates your mortal life, how you are treated, and your path across the mortal world. If you pick a grade, you will get a random aptitude within that aptitude range. You can roll a 2d10 or use a number generator to get a number between 0-19.",
             options: [
                 { id: 'apt-random', name: 'Random Aptitude', cost: 150, description: 'Roll the dice on your talent.' },
                 { id: 'apt-d', name: 'D-Grade (20%-39%)', cost: 50, description: 'Poor aptitude.' },
@@ -236,7 +236,7 @@ export const CYOA_DATA = {
         luck: {
             type: 'multiple',
             title: 'Luck',
-            description: 'Lifelong, near-immutable luck modifications',
+            description: "Choose your luck modifications, which will affect your life in various ways. These are lifelong, near-immutable modifications to your luck. Only a peak rank 8 could alter these.",
             options: [
                 { id: 'luck-nemesis', name: 'Nemesis Luck', cost: 250, description: 'At each rank, find mortal enemy unusually strong for their rank.', negative: true },
                 { id: 'luck-horizon', name: 'Horizon Graveyard Luck', cost: 200, description: "Everyone around you suffers falling luck.", negative: true },
@@ -250,7 +250,7 @@ export const CYOA_DATA = {
         soul: {
             type: 'multiple',
             title: 'Soul Foundation',
-            description: 'Must buy each lower level to get specific foundation',
+            description: "Buy each lower-level soul foundation to get a specific soul foundation, starting with the ten thousand man soul. Your body also gains the necessary Dao marks/alterations to contain such a powerful soul.",
             options: [
                 { id: 'soul-10k', name: 'Ten Thousand Man Soul', cost: -50, description: 'Rank 5 expert soul.' },
                 { id: 'soul-100k', name: 'Hundred Thousand Man Soul', cost: -100, description: 'Rank 6 immortal soul.', requires: ['soul-10k'] },
@@ -282,12 +282,12 @@ export const CYOA_DATA = {
         grabBagBundles: {
             type: 'single',
             title: 'Grab Bag Perks',
-            description: 'Select bundle size',
+            description: "Grab bag perks are minor perks that are nice to have but not substantial enough to be full perks by themselves.",
             options: [
-                { id: 'grab-3', name: '3 Grab Bag Perks', cost: -50, count: 3 },
-                { id: 'grab-5', name: '5 Grab Bag Perks', cost: -100, count: 5 },
-                { id: 'grab-7', name: '7 Grab Bag Perks', cost: -150, count: 7 },
-                { id: 'grab-10', name: '10 Grab Bag Perks', cost: -200, count: 10 }
+                { id: 'grab-3', name: '3 Grab Bag Perks', cost: -50, count: 3, description: "Pick 3 of any grab bag perks" },
+                { id: 'grab-5', name: '5 Grab Bag Perks', cost: -100, count: 5, description: "Pick 5 of any grab bag perks" },
+                { id: 'grab-7', name: '7 Grab Bag Perks', cost: -150, count: 7, description: "Pick 7 of any grab bag perks" },
+                { id: 'grab-10', name: '10 Grab Bag Perks', cost: -200, count: 10, description: "Pick 10 of any grab bag perks" }
             ]
         },
 
@@ -383,7 +383,7 @@ export const CYOA_DATA = {
         premiumGu: {
             type: 'multiple',
             title: 'Premium Gu Worms',
-            description: 'Special Immortal Gu transcending Gu world limits',
+            description: "These are special Immortal Gu that have transcended the limit of gu world, it is as if they were the apex masterpiece of a venerable. Only venerables could make them from scratch, while great grandmaster attainment in their path is needed to advance them past rank 6. They won’t need to be fed for 30 years and can fit in mortal apertures. Upon choosing these worms you learn its recipe for rank 6 and may choose when these Gu worms appear in your aperture. You cannot choose these worms from any other perk.",
             options: [
                 { id: 'premium-breakdream', name: 'Break Dream', cost: -150, description: 'Dream Path. Destroys dream realms, counters dream path entities.' },
                 { id: 'premium-mastergu', name: 'Master of Gu', cost: -250, description: 'Human Path. Complete Reverend Insanity including unwritten chapters. Carves Dao marks.' },
@@ -405,7 +405,7 @@ export const CYOA_DATA = {
         missions: {
             type: 'multiple',
             title: 'Missions',
-            description: 'Complete within 300 years or die. No escape.',
+            description: "These are objectives that give you extra points, but you have to complete them within 300 years of central content time or you explode and die. Spectral Soul eats your soul, and Heaven's Will foils any rival methods. You cannot escape the consequence of not completing your missions. You may pick as many missions as you want.",
             options: [
                 { id: 'mission-traditional', name: 'Traditional', cost: 100, description: 'Create inheritance and suitable inheritance ground with trials/requirements.' },
                 { id: 'mission-paradise', name: 'Paradise', cost: 100, description: 'Enter Grotto-Heaven Blue Dragon Whale at least once.' },
@@ -424,7 +424,7 @@ export const CYOA_DATA = {
         drawbacks: {
             type: 'multiple',
             title: 'Drawbacks',
-            description: 'Cannot take same drawback twice. Overwrite other options.',
+            description: "You may take as many drawbacks as you want. However, you may not take drawbacks more than once. Drawbacks overwrite other options picked in this character creator.",
             options: [
                 { id: 'draw-nospoilers', name: 'No Spoilers', cost: 50, description: 'Cannot share Reverend Insanity contents with anyone.' },
                 { id: 'draw-daomono', name: 'Dao Monogamous', cost: 100, description: 'Other paths interfere 2× more with vital Gu path.', conflicts: ['tier2-dualdao'] },

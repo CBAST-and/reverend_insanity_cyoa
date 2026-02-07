@@ -342,6 +342,68 @@ body {
     opacity: 1;
 }
 
+/* Counter Controls for Repeatable Items */
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.counter-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+    padding: 0;
+}
+
+.counter-btn:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.counter-btn:active {
+    transform: scale(0.95);
+}
+
+.counter-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    padding: 8px 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+}
+
+.counter-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-primary);
+}
+
+.counter-total {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-left: auto;
+}
+
 .option-card.negative {
     border-left: 4px solid var(--accent-negative);
 }

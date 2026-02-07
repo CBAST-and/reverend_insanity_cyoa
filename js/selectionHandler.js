@@ -28,7 +28,7 @@ import {
     showConfirm
 } from './utils.js';
 
-import { CYOA_DATA } from './data.js';
+import { CYOA_DATA, ATTAINMENT_COSTS } from './data.js';
 import { updateSummary } from './renderer.js';
 
 /* =========================
@@ -202,6 +202,41 @@ export function handleClanStatusSelect(statusOptionId) {
 }
 
 /* =========================
+   Attainment Remove Handler
+   ========================= */
+export function handleAttainmentRemove(index) {
+    const att = state.selections.attainments[index];
+    if (!att) return;
+
+    // Refund the cost
+    const hasDiscount = state.selections.tier5.includes('tier5-dreamven');
+    const cost = ATTAINMENT_COSTS[att.level];
+    const finalCost = hasDiscount ? Math.floor(cost / 2) : cost;
+    
+    reverseCost(-finalCost); // Reverse the negative cost (add points back)
+
+    // Update counts
+    if (att.level === 'grandmaster') {
+        state.attainmentCounts.grandmaster--;
+    }
+    if (att.level === 'greatGrandmaster') {
+        state.attainmentCounts.greatGrandmaster--;
+    }
+
+    // Remove from selections
+    state.selections.attainments.splice(index, 1);
+
+    // Re-import to get the functions
+    import('./renderer.js').then(({ renderAttainmentList, updateAttainmentLimits }) => {
+        renderAttainmentList();
+        updateAttainmentLimits();
+    });
+    
+    updatePointsDisplay();
+    updateSummary();
+}
+
+/* =========================
    Giant Sun Logic
    ========================= */
 function handleGiantSun() {
@@ -226,5 +261,6 @@ function getOrdinal(n) {
 export default {
     handleSingleSelect,
     handleMultipleSelect,
-    handleClanStatusSelect
+    handleClanStatusSelect,
+    handleAttainmentRemove
 };

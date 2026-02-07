@@ -211,8 +211,8 @@ function getOptionCost(optionId) {
     }
     
     // Check grab bag items (they don't have individual costs)
-    if (CYOA_DATA.categories.grabBagItems) {
-        const item = CYOA_DATA.categories.grabBagItems.find(i => i.id === optionId);
+    if (CYOA_DATA.grabBagItems) {
+        const item = CYOA_DATA.grabBagItems.find(i => i.id === optionId);
         if (item) return 0; // Grab bag items are "free", cost is in the bundle
     }
     

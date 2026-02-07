@@ -23,7 +23,8 @@ import {
 import {
     handleSingleSelect,
     handleMultipleSelect,
-    handleClanStatusSelect
+    handleClanStatusSelect,
+    handleAttainmentRemove
 } from './selectionHandler.js';
 
 import {
@@ -144,6 +145,16 @@ function renderCategory(categoryKey, containerId) {
 
     container.innerHTML = '';
 
+    // Check if this section is disabled
+    const section = container.closest('.category');
+    if (section) {
+        if (isSectionDisabled(categoryKey)) {
+            section.classList.add('disabled');
+        } else {
+            section.classList.remove('disabled');
+        }
+    }
+
     categoryData.options.forEach(option => {
         const card = renderOptionCard(
             option,
@@ -179,33 +190,97 @@ function renderOptionCard(option, selectionType, categoryKey, containerId) {
     }
 
     let costDisplay = getCostDisplay(option.cost);
-    if (option.repeatable && isSelected(categoryKey, option.id)) {
-        costDisplay += ` ×${getRepeatCount(option.id)}`;
-    }
-
-    card.innerHTML = `
+    const count = option.repeatable ? getRepeatCount(option.id) : 0;
+    
+    // Build the card HTML
+    let cardHTML = `
         <h3>${option.name}</h3>
         <p class="cost ${getCostClass(option.cost)}">${costDisplay}</p>
-        <p class="description">${option.description}</p>
+        <p class="description">${option.description || ''}</p>
     `;
+    
+    // Add counter controls for repeatable items
+    if (option.repeatable) {
+        const totalCost = Math.abs(option.cost * count);
+        cardHTML += `
+            <div class="counter-controls">
+                <button class="counter-btn counter-minus" data-option-id="${option.id}">−</button>
+                <span class="counter-display">
+                    <span class="counter-value">${count}</span>
+                </span>
+                <button class="counter-btn counter-plus" data-option-id="${option.id}">+</button>
+                <span class="counter-total">(Total: ${totalCost} CP)</span>
+            </div>
+        `;
+    }
+    
+    card.innerHTML = cardHTML;
 
-    card.onclick = () => {
-        if (selectionType === 'single') {
-            handleSingleSelect(categoryKey, option.id);
-            rerenderCategory(categoryKey, containerId);
-        } else {
-            handleMultipleSelect(categoryKey, option.id);
-            rerenderOptionCard(card, option, categoryKey);
-        }
+    // Add click handler for non-repeatable or for the main card area
+    if (!option.repeatable) {
+        card.onclick = () => {
+            if (isSectionDisabled(categoryKey)) return;
 
-        if (categoryKey === 'clanTier') {
-            renderClanStatusOptions(option.id);
-        }
+            if (selectionType === 'single') {
+                handleSingleSelect(categoryKey, option.id);
+                rerenderCategory(categoryKey, containerId);
+            } else {
+                handleMultipleSelect(categoryKey, option.id);
+                rerenderOptionCard(card, option, categoryKey);
+            }
 
-        if (option.needsInput) {
-            toggleCustomInput(option.id, true);
+            if (categoryKey === 'clanTier') {
+                renderClanStatusOptions(option.id);
+            }
+
+            if (option.needsInput) {
+                toggleCustomInput(option.id, true);
+            }
+
+            // Check if this option disables sections
+            if (option.disables) {
+                updateDisabledSections();
+            }
+        };
+    } else {
+        // For repeatable items, add event listeners to the +/- buttons
+        const minusBtn = card.querySelector('.counter-minus');
+        const plusBtn = card.querySelector('.counter-plus');
+        
+        if (minusBtn) {
+            minusBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (isSectionDisabled(categoryKey)) return;
+                
+                const currentCount = getRepeatCount(option.id);
+                if (currentCount > 0) {
+                    handleMultipleSelect(categoryKey, option.id); // This will decrement
+                    rerenderCategory(categoryKey, containerId);
+                }
+            };
         }
-    };
+        
+        if (plusBtn) {
+            plusBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (isSectionDisabled(categoryKey)) return;
+                
+                // Check max count if applicable
+                if (option.maxCount) {
+                    const currentCount = getRepeatCount(option.id);
+                    if (currentCount >= option.maxCount) {
+                        import('./utils.js').then(({ showError }) => {
+                            showError(`Maximum ${option.maxCount} purchases allowed.`);
+                        });
+                        return;
+                    }
+                }
+                
+                handleMultipleSelect(categoryKey, option.id); // This will increment
+                rerenderCategory(categoryKey, containerId);
+            };
+        }
+    }
 
     return card;
 }
@@ -236,6 +311,22 @@ function rerenderOptionCard(card, option, categoryKey) {
 
 function rerenderCategory(categoryKey, containerId) {
     renderCategory(categoryKey, containerId);
+}
+
+/* =========================
+   Update Disabled Sections
+   ========================= */
+function updateDisabledSections() {
+    // Re-render all sections that might be affected
+    renderBasicsTab();
+    renderLocationTab();
+}
+
+function toggleCustomInput(optionId, show) {
+    const input = document.getElementById('custom-immortal-input');
+    if (input) {
+        input.style.display = show ? 'block' : 'none';
+    }
 }
 
 /* =========================
@@ -288,6 +379,40 @@ function renderClanStatusOptions(clanTierId) {
 }
 
 /* =========================
+   Tier Section Rendering
+   ========================= */
+function renderTierSection(tierKey, containerId) {
+    const container = document.getElementById(containerId);
+    const categoryData = CYOA_DATA.categories[tierKey];
+
+    if (!container || !categoryData) return;
+
+    container.innerHTML = '';
+
+    // Create category wrapper
+    const section = createEl('section', 'category');
+    section.innerHTML = `
+        <h2 class="category-title">${categoryData.title}</h2>
+        ${categoryData.description ? `<p class="category-description">${categoryData.description}</p>` : ''}
+        <div id="${tierKey}-options" class="options-grid"></div>
+    `;
+
+    container.appendChild(section);
+
+    // Render options
+    const optionsContainer = section.querySelector(`#${tierKey}-options`);
+    categoryData.options.forEach(option => {
+        const card = renderOptionCard(
+            option,
+            categoryData.type,
+            tierKey,
+            `${tierKey}-options`
+        );
+        optionsContainer.appendChild(card);
+    });
+}
+
+/* =========================
    Attainments
    ========================= */
 function renderAttainmentBuilder() {
@@ -309,7 +434,7 @@ function renderAttainmentBuilder() {
     renderAttainmentList();
 }
 
-function updateAttainmentLimits() {
+export function updateAttainmentLimits() {
     const gmCount = document.getElementById('gm-count');
     const ggmCount = document.getElementById('ggm-count');
     const noLimitsMsg = document.getElementById('no-limits-msg');
@@ -326,6 +451,42 @@ function updateAttainmentLimits() {
         `${state.attainmentCounts.grandmaster}/${ATTAINMENT_LIMITS.grandmaster}`;
     if (ggmCount) ggmCount.textContent =
         `${state.attainmentCounts.greatGrandmaster}/${ATTAINMENT_LIMITS.greatGrandmaster}`;
+}
+
+export function renderAttainmentList() {
+    const listContainer = document.getElementById('attainment-list');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+
+    if (state.selections.attainments.length === 0) {
+        listContainer.innerHTML = '<p class="info-text">No attainments selected yet</p>';
+        return;
+    }
+
+    state.selections.attainments.forEach((att, index) => {
+        const item = createEl('div', 'attainment-item');
+        
+        const cost = ATTAINMENT_COSTS[att.level];
+        const hasDiscount = state.selections.tier5.includes('tier5-dreamven');
+        const finalCost = hasDiscount ? Math.floor(cost / 2) : cost;
+
+        item.innerHTML = `
+            <div>
+                <span class="attainment-item-path">${capitalize(att.path)} Path</span>
+                <span> - ${capitalize(att.level)}</span>
+                <span class="cost costs-points"> (${finalCost} CP)</span>
+            </div>
+            <button class="attainment-item-remove" data-index="${index}">Remove</button>
+        `;
+
+        const removeBtn = item.querySelector('.attainment-item-remove');
+        removeBtn.addEventListener('click', () => {
+            handleAttainmentRemove(index);
+        });
+
+        listContainer.appendChild(item);
+    });
 }
 
 /* =========================
@@ -347,7 +508,7 @@ export function renderGrabBagSelection(bundleId) {
     maxSpan.textContent = bundle.count;
     itemsGrid.innerHTML = '';
 
-    CYOA_DATA.categories.grabBagItems.forEach(item => {
+    CYOA_DATA.grabBagItems.forEach(item => {
         const card = createEl('div', 'grab-item');
 
         const selected = state.selections.grabBagPerks.includes(item.id);
@@ -414,9 +575,23 @@ export function updateSummary() {
 
         if (Array.isArray(selection) && selection.length > 0) {
             const items = selection
-                .map(id => categoryData.options.find(opt => opt.id === id))
-                .filter(Boolean)
-                .map(opt => ({ name: opt.name, cost: opt.cost }));
+                .map(id => {
+                    const opt = categoryData.options.find(opt => opt.id === id);
+                    if (!opt) return null;
+                    
+                    // Check if repeatable and get count
+                    if (opt.repeatable) {
+                        const count = getRepeatCount(id);
+                        const totalCost = opt.cost * count;
+                        return { 
+                            name: `${opt.name} ×${count}`, 
+                            cost: totalCost 
+                        };
+                    }
+                    
+                    return { name: opt.name, cost: opt.cost };
+                })
+                .filter(Boolean);
 
             if (items.length) {
                 summaryData.push({ title: categoryData.title, items });
@@ -437,7 +612,7 @@ export function updateSummary() {
             title: 'Attainments',
             items: state.selections.attainments.map(att => ({
                 name: `${capitalize(att.path)} - ${capitalize(att.level)}`,
-                cost: 0
+                cost: -ATTAINMENT_COSTS[att.level]
             }))
         });
     }
@@ -472,5 +647,7 @@ export default {
     renderModes,
     renderAllContent,
     updateSummary,
-    renderGrabBagSelection
+    renderGrabBagSelection,
+    renderAttainmentList,
+    updateAttainmentLimits
 };

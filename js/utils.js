@@ -1,18 +1,32 @@
+// ==============================
 // Utility Functions
+// ==============================
 
 // Create element with classes and properties
 export function createEl(tag, className = '', props = {}) {
     const el = document.createElement(tag);
+
     if (className) {
         el.className = className;
     }
+
     Object.assign(el, props);
     return el;
 }
 
-// Capitalize first letter
+// Capitalize first letter with special cases
 export function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    // Special attainment cases
+    switch (str) {
+        case 'greatgrandmaster':
+            return 'Great Grandmaster';
+        case 'grandmaster':
+            return 'Grandmaster';
+        case 'master':
+            return 'Master';
+        default:
+            return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 }
 
 // Format number with commas
@@ -36,54 +50,66 @@ export function getCostClass(cost) {
 
 // Check if array has any of the values
 export function hasAny(arr, values) {
-    return values.some(v => arr.includes(v));
+    return values.some(value => arr.includes(value));
 }
+
+// ==============================
+// Requirement & Conflict Checks
+// ==============================
 
 // Check if all requirements are met
 export function checkRequirements(option, selections) {
     if (!option.requires) return true;
-    
-    const requires = Array.isArray(option.requires) ? option.requires : [option.requires];
-    
+
+    const requires = Array.isArray(option.requires)
+        ? option.requires
+        : [option.requires];
+
     for (const req of requires) {
-        // Check in all selection arrays
         let found = false;
+
         for (const category in selections) {
-            if (Array.isArray(selections[category])) {
-                if (selections[category].includes(req)) {
-                    found = true;
-                    break;
-                }
-            } else if (selections[category] === req) {
+            const selection = selections[category];
+
+            if (Array.isArray(selection) && selection.includes(req)) {
+                found = true;
+                break;
+            }
+
+            if (selection === req) {
                 found = true;
                 break;
             }
         }
+
         if (!found) return false;
     }
-    
+
     return true;
 }
 
 // Check if there are conflicts
 export function checkConflicts(option, selections) {
     if (!option.conflicts) return false;
-    
-    const conflicts = Array.isArray(option.conflicts) ? option.conflicts : [option.conflicts];
-    
+
+    const conflicts = Array.isArray(option.conflicts)
+        ? option.conflicts
+        : [option.conflicts];
+
     for (const conflict of conflicts) {
-        // Check in all selection arrays
         for (const category in selections) {
-            if (Array.isArray(selections[category])) {
-                if (selections[category].includes(conflict)) {
-                    return true;
-                }
-            } else if (selections[category] === conflict) {
+            const selection = selections[category];
+
+            if (Array.isArray(selection) && selection.includes(conflict)) {
+                return true;
+            }
+
+            if (selection === conflict) {
                 return true;
             }
         }
     }
-    
+
     return false;
 }
 
@@ -93,16 +119,17 @@ export function checkTimelineRequirement(option, timeline) {
     return timeline === option.requiresTimeline;
 }
 
+// ==============================
+// Helpers
+// ==============================
+
 // Debounce function
 export function debounce(func, wait) {
     let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+
+    return function (...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(() => func(...args), wait);
     };
 }
 
@@ -111,7 +138,7 @@ export function showError(message) {
     alert(message);
 }
 
-// Show confirmation
+// Show confirmation dialog
 export function showConfirm(message) {
     return confirm(message);
 }
@@ -121,42 +148,62 @@ export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+// ==============================
+// Data Utilities
+// ==============================
+
 // Find option by ID across all categories
 export function findOptionById(optionId, data) {
     for (const categoryKey in data.categories) {
         const category = data.categories[categoryKey];
-        if (category.options) {
-            const option = category.options.find(opt => opt.id === optionId);
-            if (option) {
-                return { option, category: categoryKey, categoryData: category };
-            }
+
+        if (!category.options) continue;
+
+        const option = category.options.find(opt => opt.id === optionId);
+        if (option) {
+            return {
+                option,
+                category: categoryKey,
+                categoryData: category
+            };
         }
     }
+
     return null;
 }
 
-// Get all selected option IDs as flat array
+// Get all selected option IDs as a flat array
 export function getAllSelectedIds(selections) {
     const ids = [];
+
     for (const category in selections) {
-        if (Array.isArray(selections[category])) {
-            ids.push(...selections[category]);
-        } else if (selections[category]) {
-            ids.push(selections[category]);
+        const selection = selections[category];
+
+        if (Array.isArray(selection)) {
+            ids.push(...selection);
+        } else if (selection) {
+            ids.push(selection);
         }
     }
+
     return ids;
 }
+
+// ==============================
+// File Handling
+// ==============================
 
 // Download JSON file
 export function downloadJSON(data, filename) {
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
+
     URL.revokeObjectURL(url);
 }
 
@@ -165,22 +212,23 @@ export function loadJSONFile(callback) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
-    
+
     input.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         const reader = new FileReader();
         reader.onload = (event) => {
             try {
                 const data = JSON.parse(event.target.result);
                 callback(data);
-            } catch (error) {
+            } catch {
                 showError('Invalid JSON file');
             }
         };
+
         reader.readAsText(file);
     });
-    
+
     input.click();
 }
