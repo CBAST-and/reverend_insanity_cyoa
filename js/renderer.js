@@ -192,7 +192,7 @@ function renderOptionCard(option, selectionType, categoryKey, containerId) {
     }
 
     let costDisplay = getCostDisplay(option.cost);
-    const count = option.repeatable ? getRepeatCount(option.id) : 0;
+    let count = option.repeatable ? (getRepeatCount(option.id) || 0) : 0;
     
     // Build the card HTML
     let cardHTML = `

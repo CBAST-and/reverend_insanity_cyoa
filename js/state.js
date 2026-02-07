@@ -37,8 +37,8 @@ export const state = {
         'tier1-guset': 0,
         'tier1-recipes': 0,
         'tier2-superguset': 0,
-        'tier2-borndao': {},  // { 'path-name': count }
-        'tier2-growth': {}    // { 'path-name': count }
+        'tier2-borndao': 0,
+        'tier2-growth': 0
     },
     
     // Attainment tracking
@@ -168,8 +168,8 @@ export function resetState() {
         'tier1-guset': 0,
         'tier1-recipes': 0,
         'tier2-superguset': 0,
-        'tier2-borndao': {},
-        'tier2-growth': {}
+        'tier2-borndao': 0,
+        'tier2-growth': 0
     };
     
     state.attainmentCounts = {

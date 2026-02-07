@@ -84,6 +84,44 @@ export function handleSingleSelect(category, optionId) {
 
     if (option.disables) {
         disableSections(option.disables);
+        
+        // Clear any selections in disabled sections
+        option.disables.forEach(disabledCategory => {
+            const currentSelection = state.selections[disabledCategory];
+            
+            if (currentSelection !== null && currentSelection !== undefined) {
+                // Handle array selections (multi-select)
+                if (Array.isArray(currentSelection) && currentSelection.length > 0) {
+                    // Reverse costs for each selected item
+                    currentSelection.forEach(selectedId => {
+                        const categoryData = CYOA_DATA.categories[disabledCategory];
+                        if (categoryData && categoryData.options) {
+                            const selectedOption = categoryData.options.find(opt => opt.id === selectedId);
+                            if (selectedOption) {
+                                reverseCost(selectedOption.cost);
+                            }
+                        }
+                    });
+                    state.selections[disabledCategory] = [];
+                } 
+                // Handle single selections
+                else if (!Array.isArray(currentSelection)) {
+                    const categoryData = CYOA_DATA.categories[disabledCategory];
+                    if (categoryData && categoryData.options) {
+                        const selectedOption = categoryData.options.find(opt => opt.id === currentSelection);
+                        if (selectedOption) {
+                            reverseCost(selectedOption.cost);
+                        }
+                    }
+                    state.selections[disabledCategory] = null;
+                }
+            }
+        });
+        
+        // Re-render all content to reflect the changes
+        import('./renderer.js').then(({ renderAllContent }) => {
+            renderAllContent();
+        });
     }
 
     if (category === 'venerable' && optionId === 'ven-giant') {

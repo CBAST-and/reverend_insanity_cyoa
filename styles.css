@@ -22,6 +22,25 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
+/* Light Theme - Purple and White */
+:root.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #faf5ff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f3e8ff;
+    --accent-primary: #8b5cf6;
+    --accent-secondary: #7c3aed;
+    --accent-positive: #10b981;
+    --accent-negative: #ef4444;
+    --accent-warning: #f59e0b;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border-color: #e9d5ff;
+    --shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(139, 92, 246, 0.15), 0 4px 6px -2px rgba(139, 92, 246, 0.08);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, var(--bg-primary) 0%, #0f1421 100%);
@@ -180,6 +199,14 @@ body {
 .btn-danger {
     background: var(--accent-negative);
     color: white;
+}
+
+.btn-theme {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    font-size: 1.2rem;
+    padding: 10px 15px;
 }
 
 .tab-navigation {

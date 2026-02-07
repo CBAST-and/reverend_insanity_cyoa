@@ -86,7 +86,7 @@ export const CYOA_DATA = {
                     name: 'Alternative Timeline',
                     cost: 300,
                     description: 'You ARE Fang Yuan - he never transmigrates. No Spring Autumn Cicada, but all other benefits. Skip race, location, appearance.',
-                    disables: ['prep', 'race', 'sex', 'appearance', 'clanTier', 'clanStatus']
+                    disables: ['prep', 'race', 'sex', 'appearance', 'clanTier', 'clanStatus', 'specialBirth']
                 }
             ]
         },
@@ -316,9 +316,9 @@ export const CYOA_DATA = {
                 { id: 'tier2-secondap', name: 'Second Aperture', cost: -100, description: 'Awaken second aperture when chosen. No rank restriction.' },
                 { id: 'tier2-superguset', name: 'Superior Gu Set', cost: -100, description: 'Pick 10 Gu worms (up to rank 5). Never need feeding.', repeatable: true, maxCount: 2 },
                 { id: 'tier2-immortalrecipes', name: 'Immortal Recipes', cost: -100, description: 'Choose 10 Gu worms. Obtain rank 1-9 recipes for each.' },
-                { id: 'tier2-borndao', name: 'Born Dao', cost: -100, description: 'Born with 50 Dao Marks in chosen path.', repeatable: true, uniquePerPath: true },
+                { id: 'tier2-borndao', name: 'Born Dao', cost: -100, description: 'Born with 50 Dao Marks in chosen path.', repeatable: true },
                 { id: 'tier2-experience', name: 'Experience', cost: -100, description: 'Before birth, experience random Gu master\'s life to rank 6 and death.' },
-                { id: 'tier2-growth', name: 'Growth', cost: -100, description: 'Choose path. 2× attainment growth in it.', repeatable: true, uniquePerPath: true },
+                { id: 'tier2-growth', name: 'Growth', cost: -100, description: 'Choose path. 2× attainment growth in it.', repeatable: true },
                 { id: 'tier2-greatlove', name: 'Great Love', cost: -100, description: 'Grandmaster in social manipulation, reading people.' }
             ]
         },
@@ -330,7 +330,7 @@ export const CYOA_DATA = {
             options: [
                 { id: 'tier3-vitalgu', name: 'Vital Gu', cost: -150, description: 'Vital Gu + 2 others guaranteed advance to rank 6.' },
                 { id: 'tier3-inheritance', name: 'Great Era Inheritance', cost: -150, description: 'Rank 6 immortal inheritance. 500 years ahead.' },
-                { id: 'tier3-reinforced', name: 'Reinforced Physique', cost: -150, description: 'No downsides from extreme physique.', requires: ['apt-extreme', 'apt-custom'] },
+                { id: 'tier3-reinforced', name: 'Reinforced Physique', cost: -150, description: 'No downsides from extreme physique.' },
                 { id: 'tier3-autobalance', name: 'Auto Balancer', cost: -150, description: 'Heaven, Earth, Human Qi automatically balanced. Guaranteed pass.' }
             ]
         },

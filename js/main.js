@@ -219,6 +219,22 @@ function setupExportImportReset() {
     const exportBtn = document.getElementById('export-btn');
     const importBtn = document.getElementById('import-btn');
     const resetBtn = document.getElementById('reset-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+    // Theme toggle
+    if (themeToggleBtn) {
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-theme');
+            const isLight = document.documentElement.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        });
+    }
 
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {
