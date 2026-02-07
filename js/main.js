@@ -43,7 +43,6 @@ function init() {
 
     setupTabNavigation();
     setupAttainmentControls();
-    setupGrabBagBundleHandlers();
     setupExportImportReset();
 
     console.log('CYOA Ready!');
@@ -211,26 +210,6 @@ async function addAttainment(level) {
     updateAttainmentLimits();
     updatePointsDisplay();
     updateSummary();
-}
-
-/* =========================
-   Grab Bag Bundles
-   ========================= */
-function setupGrabBagBundleHandlers() {
-    document.addEventListener('click', e => {
-        const card = e.target.closest('.option-card');
-        if (!card) return;
-
-        const parent = card.parentElement;
-        if (parent && parent.id === 'grab-bag-bundle-options') {
-            const bundleId = state.selections.grabBagBundles;
-            if (!bundleId) return;
-
-            import('./renderer.js').then(({ renderGrabBagSelection }) => {
-                renderGrabBagSelection(bundleId);
-            });
-        }
-    });
 }
 
 /* =========================

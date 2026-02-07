@@ -90,6 +90,13 @@ export function handleSingleSelect(category, optionId) {
         handleGiantSun();
     }
 
+    // Trigger grab bag selection interface if this is a grab bag bundle
+    if (category === 'grabBagBundles') {
+        import('./renderer.js').then(({ renderGrabBagSelection }) => {
+            renderGrabBagSelection(optionId);
+        });
+    }
+
     updatePointsDisplay();
     updateSummary();
 }
@@ -109,10 +116,14 @@ export function handleMultipleSelect(category, optionId) {
         toggleSelection(category, optionId);
 
         if (option.repeatable) {
-            decrementRepeat(optionId);
+            // Don't decrement here - that's handled by handleRepeatableDecrement
+            const count = getRepeatCount(optionId);
+            if (count > 0) {
+                reverseCost(option.cost * count);
+            }
+        } else {
+            reverseCost(option.cost);
         }
-
-        reverseCost(option.cost);
     } else {
         if (!checkRequirements(option, state.selections)) {
             showError('Requirements not met for this option.');
@@ -150,10 +161,73 @@ export function handleMultipleSelect(category, optionId) {
         toggleSelection(category, optionId);
 
         if (option.repeatable) {
-            incrementRepeat(optionId);
+            // Don't increment here - that's handled by handleRepeatableIncrement
+        } else {
+            applyCost(option.cost);
+        }
+    }
+
+    updatePointsDisplay();
+    updateSummary();
+}
+
+/* =========================
+   Repeatable Item Handlers
+   ========================= */
+export function handleRepeatableIncrement(category, optionId) {
+    const categoryData = CYOA_DATA.categories[category];
+    const option = categoryData.options.find(opt => opt.id === optionId);
+
+    if (!option || !option.repeatable) return;
+
+    // Check max count
+    if (option.maxCount) {
+        const currentCount = getRepeatCount(optionId);
+        if (currentCount >= option.maxCount) {
+            showError(`Maximum ${option.maxCount} purchases allowed.`);
+            return;
+        }
+    }
+
+    // If not selected yet, add to selections
+    if (!isSelected(category, optionId)) {
+        if (!checkRequirements(option, state.selections)) {
+            showError('Requirements not met for this option.');
+            return;
         }
 
-        applyCost(option.cost);
+        if (checkConflicts(option, state.selections)) {
+            showError('This option conflicts with a currently selected option.');
+            return;
+        }
+
+        toggleSelection(category, optionId);
+    }
+
+    // Increment count and apply cost
+    incrementRepeat(optionId);
+    applyCost(option.cost);
+
+    updatePointsDisplay();
+    updateSummary();
+}
+
+export function handleRepeatableDecrement(category, optionId) {
+    const categoryData = CYOA_DATA.categories[category];
+    const option = categoryData.options.find(opt => opt.id === optionId);
+
+    if (!option || !option.repeatable) return;
+
+    const currentCount = getRepeatCount(optionId);
+    if (currentCount <= 0) return;
+
+    // Decrement count and reverse cost
+    decrementRepeat(optionId);
+    reverseCost(option.cost);
+
+    // If count reaches 0, remove from selections
+    if (getRepeatCount(optionId) === 0) {
+        toggleSelection(category, optionId);
     }
 
     updatePointsDisplay();
@@ -262,5 +336,7 @@ export default {
     handleSingleSelect,
     handleMultipleSelect,
     handleClanStatusSelect,
-    handleAttainmentRemove
+    handleAttainmentRemove,
+    handleRepeatableIncrement,
+    handleRepeatableDecrement
 };

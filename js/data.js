@@ -291,21 +291,6 @@ export const CYOA_DATA = {
             ]
         },
 
-        grabBagItems: [
-            { id: 'grab-reading', name: 'Reading Materials', description: 'Popup window with Reverend Insanity novel and wiki.' },
-            { id: 'grab-professor', name: 'Gu Professor', description: 'Always know if an immortal Gu exists.' },
-            { id: 'grab-polyglot', name: 'Polyglot', description: 'Speak and read every region\'s language.' },
-            { id: 'grab-1ksoul', name: 'Thousand Man Soul', description: 'Born with 1,000 man soul. Control 100,000+ beasts.' },
-            { id: 'grab-otherworld', name: 'Otherworldly Dao', description: 'Choose which otherworldly Dao mark your soul comes with.' },
-            { id: 'grab-settra', name: 'Settra', description: 'Slavery Gu (any rank) does not work on you.' },
-            { id: 'grab-changewill', name: 'Change Will', description: 'Change an ideal to better fit Gu world.' },
-            { id: 'grab-memories', name: 'Memories', description: 'Before birth, gain memories of mortal whole life.' },
-            { id: 'grab-instant', name: 'Instant Success', description: 'Dao-marking Gu show full effects immediately and painlessly.' },
-            { id: 'grab-mutated', name: 'Mutated Soul', description: 'Choose mutated soul type (e.g., wolfman soul).' },
-            { id: 'grab-flying', name: 'Flying Master', description: 'Master-level attainment in flying.' },
-            { id: 'grab-secret', name: 'Secret Manuals', description: '3 secret manuals for non-aperture cultivation.' }
-        ],
-
         tier1: {
             type: 'multiple',
             title: 'Tier 1 Perks',
@@ -446,7 +431,23 @@ export const CYOA_DATA = {
                 { id: 'draw-filial', name: 'Filial Promise', cost: 300, description: 'May not attack human or variant human with intent to kill.' }
             ]
         }
-    }
+    },
+
+    // Grab bag items - separate from categories
+    grabBagItems: [
+        { id: 'grab-reading', name: 'Reading Materials', description: 'Popup window with Reverend Insanity novel and wiki.' },
+        { id: 'grab-professor', name: 'Gu Professor', description: 'Always know if an immortal Gu exists.' },
+        { id: 'grab-polyglot', name: 'Polyglot', description: 'Speak and read every region\'s language.' },
+        { id: 'grab-1ksoul', name: 'Thousand Man Soul', description: 'Born with 1,000 man soul. Control 100,000+ beasts.' },
+        { id: 'grab-otherworld', name: 'Otherworldly Dao', description: 'Choose which otherworldly Dao mark your soul comes with.' },
+        { id: 'grab-settra', name: 'Settra', description: 'Slavery Gu (any rank) does not work on you.' },
+        { id: 'grab-changewill', name: 'Change Will', description: 'Change an ideal to better fit Gu world.' },
+        { id: 'grab-memories', name: 'Memories', description: 'Before birth, gain memories of mortal whole life.' },
+        { id: 'grab-instant', name: 'Instant Success', description: 'Dao-marking Gu show full effects immediately and painlessly.' },
+        { id: 'grab-mutated', name: 'Mutated Soul', description: 'Choose mutated soul type (e.g., wolfman soul).' },
+        { id: 'grab-flying', name: 'Flying Master', description: 'Master-level attainment in flying.' },
+        { id: 'grab-secret', name: 'Secret Manuals', description: '3 secret manuals for non-aperture cultivation.' }
+    ]
 };
 
 export const ATTAINMENT_COSTS = {

@@ -24,7 +24,9 @@ import {
     handleSingleSelect,
     handleMultipleSelect,
     handleClanStatusSelect,
-    handleAttainmentRemove
+    handleAttainmentRemove,
+    handleRepeatableIncrement,
+    handleRepeatableDecrement
 } from './selectionHandler.js';
 
 import {
@@ -252,11 +254,8 @@ function renderOptionCard(option, selectionType, categoryKey, containerId) {
                 e.stopPropagation();
                 if (isSectionDisabled(categoryKey)) return;
                 
-                const currentCount = getRepeatCount(option.id);
-                if (currentCount > 0) {
-                    handleMultipleSelect(categoryKey, option.id); // This will decrement
-                    rerenderCategory(categoryKey, containerId);
-                }
+                handleRepeatableDecrement(categoryKey, option.id);
+                rerenderCategory(categoryKey, containerId);
             };
         }
         
@@ -265,18 +264,7 @@ function renderOptionCard(option, selectionType, categoryKey, containerId) {
                 e.stopPropagation();
                 if (isSectionDisabled(categoryKey)) return;
                 
-                // Check max count if applicable
-                if (option.maxCount) {
-                    const currentCount = getRepeatCount(option.id);
-                    if (currentCount >= option.maxCount) {
-                        import('./utils.js').then(({ showError }) => {
-                            showError(`Maximum ${option.maxCount} purchases allowed.`);
-                        });
-                        return;
-                    }
-                }
-                
-                handleMultipleSelect(categoryKey, option.id); // This will increment
+                handleRepeatableIncrement(categoryKey, option.id);
                 rerenderCategory(categoryKey, containerId);
             };
         }
