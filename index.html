@@ -1,72 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reverend Insanity CYOA</title>
-    
-    <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
             <h1>Reverend Insanity CYOA</h1>
-            <p class="subtitle" style="font-size: 1.1rem; margin-top: 15px; margin-bottom: 20px; line-height: 1.8; max-width: 900px; margin-left: auto; margin-right: auto;">
-                <strong>CYOA</strong> = <strong>Create Your Own Adventure</strong><br><br>
-                In the vast expanse of the Gu World, where cultivation reigns supreme and only the strong survive, countless stories unfold. 
-                Gu Masters refine mystical insects called Gu to gain supernatural powers, engage in deadly schemes, and pursue immortality. 
-                In this world where human nature is laid bare and morality is but a tool for the weak, your journey is about to begin.<br><br>
-                You find yourself with a rare opportunity—the chance to be reborn into this world with foreknowledge and choices that will shape your destiny. 
-                Will you walk the righteous path, upholding justice and protecting the weak? Or will you embrace the demonic path, pursuing power at any cost? 
+            <p class="subtitle">
+                <strong>CYOA</strong> = <strong>Choose Your Own Adventure</strong><br><br>
+                In the vast expanse of the Gu World, where cultivation reigns supreme and only the strong survive,
+                countless stories unfold.
+                Gu Masters refine mystical insects called Gu to gain supernatural powers, engage in deadly schemes, and
+                pursue immortality.
+                In this world where human nature is laid bare and morality is but a tool for the weak, your journey is
+                about to begin.<br><br>
+                You find yourself with a rare opportunity—the chance to be reborn into this world with foreknowledge and
+                choices that will shape your destiny.
+                Will you walk the righteous path, upholding justice and protecting the weak? Or will you embrace the
+                demonic path, pursuing power at any cost?
                 Perhaps you'll forge your own way, a lone cultivator bound by no faction.<br><br>
-                One night, you drift to sleep in your mundane world, and when you awaken... you are no longer on Earth. 
-                The Gu World awaits, and the choices you make here will determine whether you rise to become a Venerable, 
+                One night, you drift to sleep in your mundane world, and when you awaken... you are no longer on Earth.
+                The Gu World awaits, and the choices you make here will determine whether you rise to become a
+                Venerable,
                 reshaping heaven and earth itself, or fall as just another stepping stone for the ambitious.<br><br>
                 <strong>Your journey begins now. Choose wisely.</strong>
             </p>
-            <p class="subtitle" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 25px;">
-                Inspired and copied from <a href="https://www.reddit.com/user/GashGrunt/">u/GashGrunt</a>, 
-                <a href="https://www.reddit.com/user/smie27/">u/smie27</a>, and 
-                <a href="https://www.reddit.com/user/alphanumericsprawl/">u/alphanumericsprawl</a>
-            </p>
         </header>
 
-        <!-- Mode Selection (shown first) -->
-        <section id="mode-selection" class="mode-selection">
-            <h2>Select Your Difficulty</h2>
-            <div class="mode-grid" id="mode-grid"></div>
-        </section>
+        <!-- Points Display Toolbar (sticky) -->
+        <div id="points-display" class="points-toolbar">
+            <div class="toolbar-start">
+                <button id="settings-btn" class="toolbar-icon-btn" title="Settings" aria-label="Settings">
+                    <svg class="icon icon-settings" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18M3 12h18M3 18h18"></path>
+                    </svg>
+                </button>
+            </div>
 
-        <!-- Points Display (sticky, shown after mode selected) -->
-        <div id="points-display" class="points-display" style="display: none;">
-            <div class="points-info">
-                <span class="label">Available Points:</span>
-                <span id="current-points" class="value">1000</span>
+            <div class="toolbar-center">
+                <div class="points-info">
+                    <span class="points-label">Available:</span>
+                    <span id="current-points" class="points-value">0</span>
+                    <span class="points-unit">CP</span>
+                </div>
+                <div class="points-divider"></div>
+                <div class="points-info">
+                    <span class="points-label">Starting:</span>
+                    <span id="starting-points" class="points-value">0</span>
+                    <span class="points-unit">CP</span>
+                </div>
             </div>
-            <div class="points-info">
-                <span class="label">Starting Points:</span>
-                <span id="starting-points" class="value">1000</span>
+
+            <div class="toolbar-end"></div>
+        </div>
+
+        <!-- Settings Menu Overlay -->
+        <div id="settings-overlay" class="settings-overlay" aria-hidden="true"></div>
+
+        <!-- Settings Menu -->
+        <div id="settings-menu" class="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+            <div class="settings-header">
+                <h3 id="settings-title">Settings</h3>
+                <button class="settings-close" aria-label="Close settings">×</button>
             </div>
-            <div class="points-actions">
-                <button id="theme-toggle-btn" class="btn btn-theme" title="Toggle Light/Dark Mode">🌓</button>
-                <button id="export-btn" class="btn btn-success">Export</button>
-                <button id="import-btn" class="btn btn-primary">Import</button>
-                <button id="reset-btn" class="btn btn-danger">Reset</button>
+
+            <div class="settings-content">
+                <button id="settings-export" class="settings-item">
+                    <svg class="settings-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 3v10m0 0 4-4m-4 4-4-4M5 21h14"></path>
+                    </svg>
+                    Export Build
+                </button>
+
+                <button id="settings-import" class="settings-item">
+                    <svg class="settings-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 21V11m0 0 4 4m-4-4-4 4M5 3h14"></path>
+                    </svg>
+                    Import Build
+                </button>
+
+                <button id="settings-theme" class="settings-item">
+                    <svg class="settings-icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+                    </svg>
+                    <svg class="settings-icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 4v2m0 12v2m8-8h-2M6 12H4m13.7-5.7-1.4 1.4M7.7 16.3l-1.4 1.4m0-11.4 1.4 1.4m10 10 1.4 1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path>
+                    </svg>
+                    Toggle Theme
+                </button>
+
+                <button id="settings-reset" class="settings-item settings-danger">
+                    <svg class="settings-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path>
+                    </svg>
+                    Reset All
+                </button>
             </div>
         </div>
 
         <!-- Tab Navigation -->
-        <nav id="tab-navigation" class="tab-navigation" style="display: none;">
-            <button class="tab-btn active" data-tab="basics">Basics</button>
+        <nav id="tab-navigation" class="tab-navigation">
+            <button class="tab-btn active" data-tab="difficulty">Difficulty</button>
+            <button class="tab-btn" data-tab="basics">Basics</button>
             <button class="tab-btn" data-tab="location">Location</button>
             <button class="tab-btn" data-tab="aptitude">Aptitude</button>
             <button class="tab-btn" data-tab="power">Power</button>
@@ -77,10 +119,19 @@
         </nav>
 
         <!-- Main Content Area -->
-        <main id="cyoa-content" style="display: none;">
-            
+        <main id="cyoa-content">
+            <!-- DIFFICULTY TAB -->
+            <div id="tab-difficulty" class="tab-content active">
+                <section class="category">
+                    <h2 class="category-title">Difficulty Mode</h2>
+                    <p class="category-description">Choose your starting points. Higher difficulty means fewer resources
+                        but greater challenge!</p>
+                    <div id="difficulty-options" class="options-grid"></div>
+                </section>
+            </div>
+
             <!-- BASICS TAB -->
-            <div id="tab-basics" class="tab-content active">
+            <div id="tab-basics" class="tab-content">
                 <section class="category">
                     <h2 class="category-title">Timeline</h2>
                     <div id="timeline-options" class="options-grid"></div>
@@ -127,72 +178,25 @@
 
                 <section class="category">
                     <h2 class="category-title">Special Birth</h2>
-                    <div id="special-birth-options" class="options-grid"></div>
-                    <div id="custom-immortal-input" style="display: none; margin-top: 20px;">
-                        <label for="immortal-description" class="input-label">Describe your immortal parents:</label>
-                        <textarea id="immortal-description" rows="6" class="custom-textarea" placeholder="Enter personalities, clan affiliation, location, and other details..."></textarea>
-                    </div>
                 </section>
             </div>
 
             <!-- APTITUDE TAB -->
             <div id="tab-aptitude" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Aptitude</h2>
-                    <div id="aptitude-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Attainment</h2>
-                    <div id="attainment-limits" class="attainment-info">
-                        <p><strong>Limits:</strong> <span id="gm-count">0/4</span> Grandmaster | <span id="ggm-count">0/2</span> Great Grandmaster</p>
-                        <p id="no-limits-msg" style="display: none; color: var(--accent-positive);">✓ Limits removed by Small Dream Immortal Venerable</p>
-                    </div>
-                    <div class="attainment-builder">
-                        <div class="attainment-controls">
-                            <select id="attainment-path-select">
-                                <option value="">-- Choose Path --</option>
-                            </select>
-                            <button id="add-master-btn" class="btn">Master (-50 CP)</button>
-                            <button id="add-grandmaster-btn" class="btn">Grandmaster (-100 CP)</button>
-                            <button id="add-greatgm-btn" class="btn">Great GM (-200 CP)</button>
-                        </div>
-                        <div id="attainment-list" class="attainment-list">
-                            <p class="info-text">No attainments selected yet</p>
-                        </div>
-                    </div>
-                </section>
+                <section class="category"></section>
+                <section class="category"></section>
             </div>
 
             <!-- POWER TAB -->
             <div id="tab-power" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Luck</h2>
-                    <div id="luck-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Soul Foundation</h2>
-                    <div id="soul-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Venerable Inheritances</h2>
-                    <div id="venerable-options" class="options-grid"></div>
-                </section>
+                <section class="category"></section>
+                <section class="category"></section>
+                <section class="category"></section>
             </div>
 
             <!-- PERKS TAB -->
             <div id="tab-perks" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Grab Bag Perks</h2>
-                    <div id="grab-bag-bundle-options" class="options-grid"></div>
-                    <div id="grab-bag-selection" style="display: none; margin-top: 20px;">
-                        <h3>Select Your Perks (<span id="grab-selected">0</span>/<span id="grab-max">0</span>)</h3>
-                        <div id="grab-bag-items" class="grab-bag-grid"></div>
-                    </div>
-                </section>
-
+                <section class="category"></section>
                 <div id="tier1-section"></div>
                 <div id="tier2-section"></div>
                 <div id="tier3-section"></div>
@@ -202,76 +206,39 @@
 
             <!-- PREMIUM TAB -->
             <div id="tab-premium" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Premium Gu Worms</h2>
-                    <div id="premium-gu-options" class="options-grid"></div>
-                </section>
+                <section class="category"></section>
             </div>
 
             <!-- CHALLENGES TAB -->
             <div id="tab-challenges" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Missions</h2>
-                    <div id="missions-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Drawbacks</h2>
-                    <div id="drawbacks-options" class="options-grid"></div>
-                </section>
+                <section class="category"></section>
+                <section class="category"></section>
             </div>
 
             <!-- SUMMARY TAB -->
             <div id="tab-summary" class="tab-content">
-                <section class="summary-section">
-                    <h2>Character Summary</h2>
-                    <div id="summary-content" class="summary-content"></div>
-                </section>
+                <section class="summary-section"></section>
             </div>
-
         </main>
 
         <!-- Credits Footer -->
         <footer class="credits-footer">
             <div class="credits-section">
                 <h2 class="credits-title">Credits</h2>
-                
-                <div class="credits-license">
-                    <p>License: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution Share-Alike 4.0 International License</a></p>
-                </div>
 
-                <div class="credits-block">
-                    <h3>Original CYOA Authors</h3>
-                    <p>
-                        <a href="https://www.reddit.com/user/alphanumericsprawl/" target="_blank">u/alphanumericsprawl</a> - Original Reverend Insanity CYOA<br>
-                        <a href="https://www.reddit.com/user/GashGrunt/" target="_blank">u/GashGrunt</a> - Contributions and expansions<br>
-                        <a href="https://www.reddit.com/user/smie27/" target="_blank">u/smie27</a> - Contributions and expansions<br>
-                    </p>
-                </div>
+                <div class="credits-license"></div>
 
-                <div class="credits-block">
-                    <h3>Premium Gu Contributors</h3>
-                    <p>
-                        <a href="https://www.reddit.com/user/unlanned/" target="_blank">u/unlanned</a> - Chaos Flame Gu, Universal Solvent Gu, Self Oppression Gu, Heaven's on Central Time<br>
-                        <a href="https://www.reddit.com/user/WHOiAM981213/" target="_blank">u/WHOiAM981213</a> - Mobile Formation Immortal Gu, Innate Strength Immortal Gu, Partial Transformation Immortal Gu
-                    </p>
-                </div>
+                <div class="credits-block"></div>
+                <div class="credits-block"></div>
+                <div class="credits-block"></div>
+                <div class="credits-block"></div>
 
-                <div class="credits-block">
-                    <h3>Source Material</h3>
-                    <p>
-                        <strong>Reverend Insanity (蛊真人)</strong><br>
-                        Original Novel: Gu Zhen Ren (蛊真人)<br>
-                    </p>
-                </div>
-
-                <div class="credits-note">
-                    <p><em>If you feel that credit hasn't been given to a contributor or you are a contributor who hasn't been credited, please reach out via Reddit or Discord.</em></p>
-                </div>
+                <div class="credits-note"></div>
             </div>
         </footer>
     </div>
 
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

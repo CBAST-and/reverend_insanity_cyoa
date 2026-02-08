@@ -1,89 +1,58 @@
-// Renderer Module - Handles all UI rendering
-
-import {
-    state,
-    isSelected,
-    getRepeatCount,
-    isSectionDisabled
-} from './state.js';
-
-import {
-    CYOA_DATA,
-    ATTAINMENT_COSTS,
-    ATTAINMENT_LIMITS
-} from './data.js';
-
-import {
-    createEl,
-    getCostDisplay,
-    getCostClass,
-    capitalize
-} from './utils.js';
-
+import { state, isSelected, getRepeatCount, isSectionDisabled } from './state.js';
+import { CYOA_DATA, ATTAINMENT_LIMITS } from './data.js';
+import { createEl, getCostDisplay, getCostClass, capitalize } from './utils.js';
 import {
     handleSingleSelect,
     handleMultipleSelect,
     handleClanStatusSelect,
-    handleAttainmentRemove,
     handleRepeatableIncrement,
     handleRepeatableDecrement
 } from './selectionHandler.js';
+import { updatePointsDisplay, areAttainmentLimitsRemoved } from './pointsManager.js';
 
-import {
-    updatePointsDisplay,
-    areAttainmentLimitsRemoved
-} from './pointsManager.js';
+/* ================= DIFFICULTY TAB ================= */
 
-/* =========================
-   Mode Selection
-   ========================= */
-export function renderModes() {
-    const grid = document.getElementById('mode-grid');
-    if (!grid) return;
+export function renderDifficultyTab() {
+    const container = document.getElementById('difficulty-options');
+    if (!container) return;
 
-    grid.innerHTML = '';
+    container.innerHTML = '';
 
     CYOA_DATA.modes.forEach(mode => {
-        const card = createEl('div', 'mode-card', {
-            innerHTML: `
-                <h3>${mode.name}</h3>
-                <p class="points">${mode.points.toLocaleString()} CP</p>
-                <p class="description">${mode.description}</p>
-            `,
-            onclick: () => selectMode(mode)
-        });
+        const card = createEl('div', 'option-card difficulty-mode-card');
 
-        grid.appendChild(card);
+        if (state.mode === mode.id) {
+            card.classList.add('selected');
+        }
+
+        card.innerHTML = `
+            <h3>${mode.name}</h3>
+            <p class="difficulty-points">${mode.points.toLocaleString()} CP</p>
+            <p class="description">${mode.description}</p>
+        `;
+
+        card.onclick = () => {
+            container.querySelectorAll('.option-card')
+                .forEach(c => c.classList.remove('selected'));
+
+            card.classList.add('selected');
+
+            state.mode = mode.id;
+            state.startingPoints = mode.points;
+            state.currentPoints = mode.points;
+
+            updatePointsDisplay();
+            updateSummary();
+        };
+
+        container.appendChild(card);
     });
 }
 
-function selectMode(mode) {
-    document
-        .querySelectorAll('.mode-card')
-        .forEach(c => c.classList.remove('selected'));
+/* ================= MAIN RENDER ================= */
 
-    event.currentTarget.classList.add('selected');
-
-    state.mode = mode.id;
-    state.startingPoints = mode.points;
-    state.currentPoints = mode.points;
-
-    document.getElementById('mode-selection').style.display = 'none';
-    document.getElementById('points-display').style.display = 'flex';
-    document.getElementById('tab-navigation').style.display = 'flex';
-    document.getElementById('cyoa-content').style.display = 'block';
-
-    renderAllContent();
-    updatePointsDisplay();
-}
-
-/* =========================
-   Main Rendering Pipeline
-   ========================= */
 export function renderAllContent() {
-    // First inject category descriptions from data
-    injectCategoryDescriptions();
-    
+    renderDifficultyTab();
     renderBasicsTab();
     renderLocationTab();
     renderAptitudeTab();
@@ -93,60 +62,8 @@ export function renderAllContent() {
     renderChallengesTab();
 }
 
-/* =========================
-   Inject Category Descriptions
-   ========================= */
-function injectCategoryDescriptions() {
-    const mappings = {
-        'timeline': 'timeline-options',
-        'specialTraits': 'special-traits-options',
-        'clanTier': 'clan-tier-options',
-        'aptitude': 'aptitude-options',
-        'luck': 'luck-options',
-        'soul': 'soul-options',
-        'venerable': 'venerable-options',
-        'premiumGu': 'premium-gu-options',
-        'missions': 'missions-options',
-        'drawbacks': 'drawbacks-options'
-    };
-    
-    for (const [categoryKey, elementId] of Object.entries(mappings)) {
-        const categoryData = CYOA_DATA.categories[categoryKey];
-        if (!categoryData) continue;
-        
-        const container = document.getElementById(elementId);
-        if (!container) continue;
-        
-        const section = container.closest('.category');
-        if (!section) continue;
-        
-        // Remove existing description if any
-        const existingDesc = section.querySelector('.category-description');
-        if (existingDesc) {
-            existingDesc.remove();
-        }
-        
-        // Add new description if it exists in data
-        if (categoryData.description) {
-            const title = section.querySelector('.category-title');
-            if (title) {
-                const desc = createEl('p', 'category-description');
-                desc.textContent = categoryData.description;
-                
-                // Add warning class for missions/drawbacks
-                if (categoryKey === 'missions' || categoryKey === 'drawbacks') {
-                    desc.classList.add('warning');
-                }
-                
-                title.insertAdjacentElement('afterend', desc);
-            }
-        }
-    }
-}
+/* ================= TAB RENDERERS ================= */
 
-/* =========================
-   Tabs
-   ========================= */
 function renderBasicsTab() {
     renderCategory('timeline', 'timeline-options');
     renderCategory('prep', 'prep-options');
@@ -190,26 +107,29 @@ function renderChallengesTab() {
     renderCategory('drawbacks', 'drawbacks-options');
 }
 
-/* =========================
-   Category & Option Rendering
-   ========================= */
+/* ================= CATEGORY ================= */
+
 function renderCategory(categoryKey, containerId) {
     const container = document.getElementById(containerId);
+    if (!container) return;
+
     const categoryData = CYOA_DATA.categories[categoryKey];
+    if (!categoryData) return;
 
-    if (!container || !categoryData) return;
-
-    container.innerHTML = '';
-
-    // Check if this section is disabled
-    const section = container.closest('.category');
-    if (section) {
-        if (isSectionDisabled(categoryKey)) {
-            section.classList.add('disabled');
-        } else {
-            section.classList.remove('disabled');
+    const parent = container.closest('.category');
+    if (parent && categoryData.description) {
+        let desc = parent.querySelector('.category-description');
+        if (!desc) {
+            desc = createEl('p', 'category-description');
+            const title = parent.querySelector('.category-title');
+            title?.after(desc);
         }
+        desc.textContent = categoryData.description;
+        desc.style.display = 'block';
     }
+
+    // Clear ONLY the options
+    container.innerHTML = '';
 
     categoryData.options.forEach(option => {
         const card = renderOptionCard(
@@ -222,158 +142,79 @@ function renderCategory(categoryKey, containerId) {
     });
 }
 
+
 function renderOptionCard(option, selectionType, categoryKey, containerId) {
     const card = createEl('div', 'option-card');
 
-    if (isSelected(categoryKey, option.id)) {
-        card.classList.add('selected');
-    }
+    if (isSelected(categoryKey, option.id)) card.classList.add('selected');
+    if (isSectionDisabled(categoryKey)) card.classList.add('disabled');
+    if (option.repeatable) card.classList.add('repeatable');
+    if (option.negative) card.classList.add('negative');
 
-    if (isSectionDisabled(categoryKey)) {
-        card.classList.add('disabled');
-    }
-
-    if (option.repeatable) {
-        card.classList.add('repeatable');
-        const count = getRepeatCount(option.id);
-        if (count > 0) card.setAttribute('data-count', count);
-    }
-
-    if (option.negative) {
-        card.classList.add('negative');
-    } else if (option.cost > 0) {
-        card.classList.add('positive');
-    }
-
-    let costDisplay = getCostDisplay(option.cost);
-    let count = option.repeatable ? (getRepeatCount(option.id) || 0) : 0;
-    
-    // Build the card HTML
-    let cardHTML = `
+    card.innerHTML = `
         <h3>${option.name}</h3>
-        <p class="cost ${getCostClass(option.cost)}">${costDisplay}</p>
-        <p class="description">${option.description || ''}</p>
+        <p class="cost ${getCostClass(option.cost)}">${getCostDisplay(option.cost)}</p>
+        <p class="description">${option.description}</p>
     `;
-    
-    // Add counter controls for repeatable items
-    if (option.repeatable) {
-        const totalCost = Math.abs(option.cost * count);
-        cardHTML += `
-            <div class="counter-controls">
-                <button class="counter-btn counter-minus" data-option-id="${option.id}">−</button>
-                <span class="counter-display">
-                    <span class="counter-value">${count}</span>
-                </span>
-                <button class="counter-btn counter-plus" data-option-id="${option.id}">+</button>
-                <span class="counter-total">(Total: ${totalCost} CP)</span>
+
+    if (option.repeatable && selectionType === 'multiple') {
+        const count = getRepeatCount(option.id);
+
+        const counter = createEl('div', 'counter-controls');
+        counter.innerHTML = `
+            <button class="counter-btn counter-minus">−</button>
+            <div class="counter-display">
+                <span class="counter-value">${count}</span>
             </div>
+            <button class="counter-btn counter-plus">+</button>
+            <span class="counter-total">
+                ${count > 0 ? `Total: ${getCostDisplay(option.cost * count)}` : ''}
+            </span>
         `;
-    }
-    
-    card.innerHTML = cardHTML;
 
-    // Add click handler for non-repeatable or for the main card area
-    if (!option.repeatable) {
-        card.onclick = () => {
-            if (isSectionDisabled(categoryKey)) return;
-
-            if (selectionType === 'single') {
-                handleSingleSelect(categoryKey, option.id);
-                rerenderCategory(categoryKey, containerId);
-            } else {
-                handleMultipleSelect(categoryKey, option.id);
-                rerenderOptionCard(card, option, categoryKey);
-            }
-
-            if (categoryKey === 'clanTier') {
-                renderClanStatusOptions(option.id);
-            }
-
-            if (option.needsInput) {
-                toggleCustomInput(option.id, true);
-            }
-
-            // Check if this option disables sections
-            if (option.disables) {
-                updateDisabledSections();
+        counter.querySelector('.counter-minus').onclick = e => {
+            e.stopPropagation();
+            if (count > 0) {
+                handleRepeatableDecrement(categoryKey, option.id);
+                renderCategory(categoryKey, containerId);
             }
         };
-    } else {
-        // For repeatable items, add event listeners to the +/- buttons
-        const minusBtn = card.querySelector('.counter-minus');
-        const plusBtn = card.querySelector('.counter-plus');
-        
-        if (minusBtn) {
-            minusBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (isSectionDisabled(categoryKey)) return;
-                
-                handleRepeatableDecrement(categoryKey, option.id);
-                rerenderCategory(categoryKey, containerId);
-            };
-        }
-        
-        if (plusBtn) {
-            plusBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (isSectionDisabled(categoryKey)) return;
-                
-                handleRepeatableIncrement(categoryKey, option.id);
-                rerenderCategory(categoryKey, containerId);
-            };
-        }
+
+        counter.querySelector('.counter-plus').onclick = e => {
+            e.stopPropagation();
+            handleRepeatableIncrement(categoryKey, option.id);
+            renderCategory(categoryKey, containerId);
+        };
+
+        card.appendChild(counter);
+        return card;
     }
+
+    card.onclick = () => {
+        if (isSectionDisabled(categoryKey)) return;
+
+        if (selectionType === 'single') {
+            handleSingleSelect(categoryKey, option.id);
+            renderCategory(categoryKey, containerId);
+        } else {
+            handleMultipleSelect(categoryKey, option.id);
+            card.classList.toggle('selected', isSelected(categoryKey, option.id));
+        }
+
+        if (categoryKey === 'clanTier') {
+            renderClanStatusOptions(option.id);
+        }
+
+        if (categoryKey === 'grabBagBundles') {
+            renderGrabBagSelection(option.id);
+        }
+    };
 
     return card;
 }
 
-function rerenderOptionCard(card, option, categoryKey) {
-    card.classList.toggle(
-        'selected',
-        isSelected(categoryKey, option.id)
-    );
+/* ================= CLAN STATUS ================= */
 
-    if (!option.repeatable) return;
-
-    const count = getRepeatCount(option.id);
-    const costEl = card.querySelector('.cost');
-
-    if (count > 0) {
-        card.setAttribute('data-count', count);
-        if (costEl) {
-            costEl.textContent = `${getCostDisplay(option.cost)} ×${count}`;
-        }
-    } else {
-        card.removeAttribute('data-count');
-        if (costEl) {
-            costEl.textContent = getCostDisplay(option.cost);
-        }
-    }
-}
-
-function rerenderCategory(categoryKey, containerId) {
-    renderCategory(categoryKey, containerId);
-}
-
-/* =========================
-   Update Disabled Sections
-   ========================= */
-function updateDisabledSections() {
-    // Re-render all sections that might be affected
-    renderBasicsTab();
-    renderLocationTab();
-}
-
-function toggleCustomInput(optionId, show) {
-    const input = document.getElementById('custom-immortal-input');
-    if (input) {
-        input.style.display = show ? 'block' : 'none';
-    }
-}
-
-/* =========================
-   Clan Status
-   ========================= */
 function renderClanStatusOptions(clanTierId) {
     const section = document.getElementById('clan-status-section');
     const container = document.getElementById('clan-status-options');
@@ -381,11 +222,10 @@ function renderClanStatusOptions(clanTierId) {
 
     if (!section || !container) return;
 
-    const clanTier = CYOA_DATA.categories.clanTier.options.find(
-        opt => opt.id === clanTierId
-    );
+    const clanTier = CYOA_DATA.categories.clanTier.options
+        .find(opt => opt.id === clanTierId);
 
-    if (!clanTier || !clanTier.statusOptions) {
+    if (!clanTier?.statusOptions) {
         section.style.display = 'none';
         return;
     }
@@ -394,24 +234,21 @@ function renderClanStatusOptions(clanTierId) {
     container.innerHTML = '';
     desc.textContent = `Select your status in ${clanTier.name}`;
 
-    clanTier.statusOptions.forEach(statusOpt => {
+    clanTier.statusOptions.forEach(status => {
         const card = createEl('div', 'option-card');
 
-        if (state.selections.clanStatus === statusOpt.id) {
+        if (state.selections.clanStatus === status.id) {
             card.classList.add('selected');
         }
 
         card.innerHTML = `
-            <h3>${statusOpt.name}</h3>
-            <p class="cost ${getCostClass(statusOpt.cost)}">
-                ${getCostDisplay(statusOpt.cost)}
-            </p>
+            <h3>${status.name}</h3>
+            <p class="cost ${getCostClass(status.cost)}">${getCostDisplay(status.cost)}</p>
         `;
 
         card.onclick = () => {
-            handleClanStatusSelect(statusOpt.id);
-            container
-                .querySelectorAll('.option-card')
+            handleClanStatusSelect(status.id);
+            container.querySelectorAll('.option-card')
                 .forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
         };
@@ -420,56 +257,37 @@ function renderClanStatusOptions(clanTierId) {
     });
 }
 
-/* =========================
-   Tier Section Rendering
-   ========================= */
-function renderTierSection(tierKey, containerId) {
-    const container = document.getElementById(containerId);
-    const categoryData = CYOA_DATA.categories[tierKey];
+/* ================= TIERS ================= */
 
-    if (!container || !categoryData) return;
+function renderTierSection(tierKey, sectionId) {
+    const section = document.getElementById(sectionId);
+    const tierData = CYOA_DATA.categories[tierKey];
+    if (!section || !tierData) return;
 
-    container.innerHTML = '';
-
-    // Create category wrapper
-    const section = createEl('section', 'category');
     section.innerHTML = `
-        <h2 class="category-title">${categoryData.title}</h2>
-        ${categoryData.description ? `<p class="category-description">${categoryData.description}</p>` : ''}
-        <div id="${tierKey}-options" class="options-grid"></div>
+        <section class="category">
+            <h2 class="category-title">${tierData.title}</h2>
+            ${tierData.description ? `<p class="category-description">${tierData.description}</p>` : ''}
+            <div id="${tierKey}-options" class="options-grid"></div>
+        </section>
     `;
 
-    container.appendChild(section);
-
-    // Render options
-    const optionsContainer = section.querySelector(`#${tierKey}-options`);
-    categoryData.options.forEach(option => {
-        const card = renderOptionCard(
-            option,
-            categoryData.type,
-            tierKey,
-            `${tierKey}-options`
-        );
-        optionsContainer.appendChild(card);
-    });
+    renderCategory(tierKey, `${tierKey}-options`);
 }
 
-/* =========================
-   Attainments
-   ========================= */
-function renderAttainmentBuilder() {
-    const pathSelect = document.getElementById('attainment-path-select');
-    if (!pathSelect) return;
+/* ================= ATTAINMENTS ================= */
 
-    pathSelect.innerHTML = '<option value="">-- Choose Path --</option>';
+export function renderAttainmentBuilder() {
+    const select = document.getElementById('attainment-path-select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">-- Choose Path --</option>';
 
     CYOA_DATA.paths.forEach(path => {
-        pathSelect.appendChild(
-            createEl('option', '', {
-                value: path,
-                textContent: `${capitalize(path)} Path`
-            })
-        );
+        const opt = createEl('option');
+        opt.value = path;
+        opt.textContent = `${capitalize(path)} Path`;
+        select.appendChild(opt);
     });
 
     updateAttainmentLimits();
@@ -477,217 +295,161 @@ function renderAttainmentBuilder() {
 }
 
 export function updateAttainmentLimits() {
-    const gmCount = document.getElementById('gm-count');
-    const ggmCount = document.getElementById('ggm-count');
-    const noLimitsMsg = document.getElementById('no-limits-msg');
+    const gm = document.getElementById('gm-count');
+    const ggm = document.getElementById('ggm-count');
+    const msg = document.getElementById('no-limits-msg');
 
     if (areAttainmentLimitsRemoved()) {
-        if (noLimitsMsg) noLimitsMsg.style.display = 'block';
-        if (gmCount) gmCount.textContent = `${state.attainmentCounts.grandmaster}/∞`;
-        if (ggmCount) ggmCount.textContent = `${state.attainmentCounts.greatGrandmaster}/∞`;
-        return;
+        msg && (msg.style.display = 'block');
+        gm && (gm.textContent = `${state.attainmentCounts.grandmaster}/∞`);
+        ggm && (ggm.textContent = `${state.attainmentCounts.greatGrandmaster}/∞`);
+    } else {
+        msg && (msg.style.display = 'none');
+        gm && (gm.textContent = `${state.attainmentCounts.grandmaster}/${ATTAINMENT_LIMITS.grandmaster}`);
+        ggm && (ggm.textContent = `${state.attainmentCounts.greatGrandmaster}/${ATTAINMENT_LIMITS.greatGrandmaster}`);
     }
-
-    if (noLimitsMsg) noLimitsMsg.style.display = 'none';
-    if (gmCount) gmCount.textContent =
-        `${state.attainmentCounts.grandmaster}/${ATTAINMENT_LIMITS.grandmaster}`;
-    if (ggmCount) ggmCount.textContent =
-        `${state.attainmentCounts.greatGrandmaster}/${ATTAINMENT_LIMITS.greatGrandmaster}`;
 }
 
 export function renderAttainmentList() {
-    const listContainer = document.getElementById('attainment-list');
-    if (!listContainer) return;
+    const list = document.getElementById('attainment-list');
+    if (!list) return;
 
-    listContainer.innerHTML = '';
-
-    if (state.selections.attainments.length === 0) {
-        listContainer.innerHTML = '<p class="info-text">No attainments selected yet</p>';
+    if (!state.selections.attainments.length) {
+        list.innerHTML = '<p class="info-text">No attainments selected yet</p>';
         return;
     }
 
-    state.selections.attainments.forEach((att, index) => {
+    list.innerHTML = '';
+
+    state.selections.attainments.forEach((att, i) => {
         const item = createEl('div', 'attainment-item');
-        
-        const cost = ATTAINMENT_COSTS[att.level];
-        const hasDiscount = state.selections.tier5.includes('tier5-dreamven');
-        const finalCost = hasDiscount ? Math.floor(cost / 2) : cost;
 
         item.innerHTML = `
             <div>
-                <span class="attainment-item-path">${capitalize(att.path)} Path</span>
-                <span> - ${capitalize(att.level)}</span>
-                <span class="cost costs-points"> (${finalCost} CP)</span>
+                <div class="attainment-item-path">${capitalize(att.path)} Path</div>
+                <div>${capitalize(att.level)}</div>
             </div>
-            <button class="attainment-item-remove" data-index="${index}">Remove</button>
+            <button class="attainment-item-remove">Remove</button>
         `;
 
-        const removeBtn = item.querySelector('.attainment-item-remove');
-        removeBtn.addEventListener('click', () => {
-            handleAttainmentRemove(index);
-        });
+        item.querySelector('button').onclick = () =>
+            import('./selectionHandler.js')
+                .then(m => m.handleAttainmentRemove(i));
 
-        listContainer.appendChild(item);
+        list.appendChild(item);
     });
 }
 
-/* =========================
-   Grab Bag
-   ========================= */
+/* ================= GRAB BAG ================= */
+
 export function renderGrabBagSelection(bundleId) {
-    const selection = document.getElementById('grab-bag-selection');
-    const itemsGrid = document.getElementById('grab-bag-items');
-    const maxSpan = document.getElementById('grab-max');
+    const grid = document.getElementById('grab-bag-items');
+    const selected = document.getElementById('grab-selected');
+    const max = document.getElementById('grab-max');
 
-    if (!selection || !itemsGrid) return;
+    if (!grid || !selected || !max) return;
 
-    const bundle = CYOA_DATA.categories.grabBagBundles.options.find(
-        opt => opt.id === bundleId
-    );
+    const bundle = CYOA_DATA.categories.grabBagBundles.options
+        .find(b => b.id === bundleId);
     if (!bundle) return;
 
-    selection.style.display = 'block';
-    maxSpan.textContent = bundle.count;
-    itemsGrid.innerHTML = '';
+    max.textContent = bundle.count;
+    grid.innerHTML = '';
 
     CYOA_DATA.grabBagItems.forEach(item => {
         const card = createEl('div', 'grab-item');
 
-        const selected = state.selections.grabBagPerks.includes(item.id);
-        const atMax =
-            state.selections.grabBagPerks.length >= bundle.count &&
-            !selected;
+        const picked = state.selections.grabBagPerks.includes(item.id);
+        if (picked) card.classList.add('selected');
 
-        if (selected) card.classList.add('selected');
-        if (atMax) card.classList.add('disabled');
+        if (!picked && state.selections.grabBagPerks.length >= bundle.count) {
+            card.classList.add('disabled');
+        }
 
-        card.innerHTML = `
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-        `;
+        card.innerHTML = `<h4>${item.name}</h4><p>${item.description}</p>`;
 
         card.onclick = () => {
             if (card.classList.contains('disabled')) return;
 
-            if (selected) {
-                state.selections.grabBagPerks =
-                    state.selections.grabBagPerks.filter(id => id !== item.id);
-                card.classList.remove('selected');
-            } else {
-                state.selections.grabBagPerks.push(item.id);
-                card.classList.add('selected');
-            }
+            const idx = state.selections.grabBagPerks.indexOf(item.id);
+            idx >= 0
+                ? state.selections.grabBagPerks.splice(idx, 1)
+                : state.selections.grabBagPerks.push(item.id);
 
-            document.getElementById('grab-selected').textContent =
-                state.selections.grabBagPerks.length;
-
-            itemsGrid.querySelectorAll('.grab-item').forEach(c => {
-                c.classList.toggle(
-                    'disabled',
-                    state.selections.grabBagPerks.length >= bundle.count &&
-                    !c.classList.contains('selected')
-                );
-            });
-
+            renderGrabBagSelection(bundleId);
             updateSummary();
         };
 
-        itemsGrid.appendChild(card);
+        grid.appendChild(card);
     });
 
-    document.getElementById('grab-selected').textContent =
-        state.selections.grabBagPerks.length;
+    selected.textContent = state.selections.grabBagPerks.length;
 }
 
-/* =========================
-   Summary
-   ========================= */
+/* ================= SUMMARY ================= */
+
 export function updateSummary() {
-    const summaryContent = document.getElementById('summary-content');
-    if (!summaryContent) return;
+    const container = document.getElementById('summary-content');
+    if (!container) return;
 
-    summaryContent.innerHTML = '';
+    container.innerHTML = '';
 
-    const summaryData = [];
+    const sections = [];
 
-    for (const categoryKey in state.selections) {
-        const selection = state.selections[categoryKey];
-        const categoryData = CYOA_DATA.categories[categoryKey];
-        if (!categoryData) continue;
+    for (const key in state.selections) {
+        const sel = state.selections[key];
+        const cat = CYOA_DATA.categories[key];
+        if (!cat) continue;
 
-        if (Array.isArray(selection) && selection.length > 0) {
-            const items = selection
-                .map(id => {
-                    const opt = categoryData.options.find(opt => opt.id === id);
-                    if (!opt) return null;
-                    
-                    // Check if repeatable and get count
-                    if (opt.repeatable) {
-                        const count = getRepeatCount(id);
-                        const totalCost = opt.cost * count;
-                        return { 
-                            name: `${opt.name} ×${count}`, 
-                            cost: totalCost 
-                        };
-                    }
-                    
-                    return { name: opt.name, cost: opt.cost };
-                })
-                .filter(Boolean);
+        const items = Array.isArray(sel)
+            ? sel.map(id => cat.options.find(o => o.id === id)).filter(Boolean)
+            : sel ? [cat.options.find(o => o.id === sel)] : [];
 
-            if (items.length) {
-                summaryData.push({ title: categoryData.title, items });
-            }
-        } else if (selection) {
-            const opt = categoryData.options.find(o => o.id === selection);
-            if (opt) {
-                summaryData.push({
-                    title: categoryData.title,
-                    items: [{ name: opt.name, cost: opt.cost }]
-                });
-            }
+        if (items.length) {
+            sections.push({
+                title: cat.title,
+                items: items.map(o => ({ name: o.name, cost: o.cost }))
+            });
         }
     }
 
-    if (state.selections.attainments.length > 0) {
-        summaryData.push({
+    if (state.selections.attainments.length) {
+        sections.push({
             title: 'Attainments',
-            items: state.selections.attainments.map(att => ({
-                name: `${capitalize(att.path)} - ${capitalize(att.level)}`,
-                cost: -ATTAINMENT_COSTS[att.level]
+            items: state.selections.attainments.map(a => ({
+                name: `${capitalize(a.path)} - ${capitalize(a.level)}`,
+                cost: 0
             }))
         });
     }
 
-    if (!summaryData.length) {
-        summaryContent.innerHTML =
-            '<p class="info-text">No selections yet. Start building your character!</p>';
+    if (!sections.length) {
+        container.innerHTML = '<p class="info-text">No selections yet.</p>';
         return;
     }
 
-    summaryData.forEach(section => {
-        const categoryDiv = createEl('div', 'summary-category');
-        categoryDiv.innerHTML = `<h3>${section.title}</h3><ul></ul>`;
+    sections.forEach(sec => {
+        const block = createEl('div', 'summary-category');
+        block.innerHTML = `<h3>${sec.title}</h3><ul></ul>`;
 
-        const ul = categoryDiv.querySelector('ul');
-        section.items.forEach(item => {
+        sec.items.forEach(i => {
             const li = createEl('li');
             li.innerHTML = `
-                <span class="summary-item-name">${item.name}</span>
-                <span class="summary-item-cost ${getCostClass(item.cost)}">
-                    ${getCostDisplay(item.cost)}
-                </span>
+                <span>${i.name}</span>
+                <span class="${getCostClass(i.cost)}">${getCostDisplay(i.cost)}</span>
             `;
-            ul.appendChild(li);
+            block.querySelector('ul').appendChild(li);
         });
 
-        summaryContent.appendChild(categoryDiv);
+        container.appendChild(block);
     });
 }
 
+/* ================= EXPORT ================= */
+
 export default {
-    renderModes,
     renderAllContent,
+    renderDifficultyTab,
     updateSummary,
     renderGrabBagSelection,
     renderAttainmentList,

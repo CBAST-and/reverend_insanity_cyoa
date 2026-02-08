@@ -1,10 +1,14 @@
-// State Management Module
+// State Management Module with LocalStorage
 export const state = {
     mode: null,
     startingPoints: 0,
     currentPoints: 0,
     
     selections: {
+        metaAwareness: null,
+        metaKnowledge: null,
+        metaStoryType: null,
+        metaOther: [],
         timeline: null,
         prep: null,
         race: null,
@@ -31,7 +35,6 @@ export const state = {
         attainments: []
     },
     
-    // Track counts for repeatable items
     repeatCounts: {
         'tier1-wealth': 0,
         'tier1-guset': 0,
@@ -41,47 +44,45 @@ export const state = {
         'tier2-growth': 0
     },
     
-    // Attainment tracking
     attainmentCounts: {
         grandmaster: 0,
         greatGrandmaster: 0
     },
     
-    // Custom inputs
     customInputs: {
         immortalParents: ''
     },
     
-    // Disabled sections
-    disabledSections: []
+    disabledSections: [],
+    setupComplete: false
 };
 
-// Get selection by category
+const STORAGE_KEY = 'ri-cyoa-state';
+
 export function getSelection(category) {
     return state.selections[category];
 }
 
-// Set selection for single-select category
 export function setSelection(category, value) {
     state.selections[category] = value;
+    saveToLocalStorage();
 }
 
-// Add selection for multi-select category
 export function addSelection(category, value) {
     if (!state.selections[category].includes(value)) {
         state.selections[category].push(value);
+        saveToLocalStorage();
     }
 }
 
-// Remove selection from multi-select category
 export function removeSelection(category, value) {
     const index = state.selections[category].indexOf(value);
     if (index > -1) {
         state.selections[category].splice(index, 1);
+        saveToLocalStorage();
     }
 }
 
-// Toggle selection for multi-select
 export function toggleSelection(category, value) {
     if (state.selections[category].includes(value)) {
         removeSelection(category, value);
@@ -92,7 +93,6 @@ export function toggleSelection(category, value) {
     }
 }
 
-// Check if option is selected
 export function isSelected(category, optionId) {
     const selection = state.selections[category];
     if (Array.isArray(selection)) {
@@ -101,28 +101,21 @@ export function isSelected(category, optionId) {
     return selection === optionId;
 }
 
-// Increment repeat count
 export function incrementRepeat(optionId, subkey = null) {
     if (subkey) {
-        // For path-specific repeats like borndao/growth
-        if (!state.repeatCounts[optionId]) {
-            state.repeatCounts[optionId] = {};
-        }
-        if (!state.repeatCounts[optionId][subkey]) {
-            state.repeatCounts[optionId][subkey] = 0;
-        }
+        if (!state.repeatCounts[optionId]) state.repeatCounts[optionId] = {};
+        if (!state.repeatCounts[optionId][subkey]) state.repeatCounts[optionId][subkey] = 0;
         state.repeatCounts[optionId][subkey]++;
+        saveToLocalStorage();
         return state.repeatCounts[optionId][subkey];
     } else {
-        if (!state.repeatCounts[optionId]) {
-            state.repeatCounts[optionId] = 0;
-        }
+        if (!state.repeatCounts[optionId]) state.repeatCounts[optionId] = 0;
         state.repeatCounts[optionId]++;
+        saveToLocalStorage();
         return state.repeatCounts[optionId];
     }
 }
 
-// Decrement repeat count
 export function decrementRepeat(optionId, subkey = null) {
     if (subkey) {
         if (state.repeatCounts[optionId] && state.repeatCounts[optionId][subkey]) {
@@ -130,26 +123,22 @@ export function decrementRepeat(optionId, subkey = null) {
             if (state.repeatCounts[optionId][subkey] <= 0) {
                 delete state.repeatCounts[optionId][subkey];
             }
+            saveToLocalStorage();
         }
     } else {
         if (state.repeatCounts[optionId]) {
             state.repeatCounts[optionId]--;
-            if (state.repeatCounts[optionId] <= 0) {
-                state.repeatCounts[optionId] = 0;
-            }
+            if (state.repeatCounts[optionId] <= 0) state.repeatCounts[optionId] = 0;
+            saveToLocalStorage();
         }
     }
 }
 
-// Get repeat count
 export function getRepeatCount(optionId, subkey = null) {
-    if (subkey) {
-        return state.repeatCounts[optionId]?.[subkey] || 0;
-    }
+    if (subkey) return state.repeatCounts[optionId]?.[subkey] || 0;
     return state.repeatCounts[optionId] || 0;
 }
 
-// Reset state
 export function resetState() {
     state.mode = null;
     state.startingPoints = 0;
@@ -172,28 +161,23 @@ export function resetState() {
         'tier2-growth': 0
     };
     
-    state.attainmentCounts = {
-        grandmaster: 0,
-        greatGrandmaster: 0
-    };
-    
-    state.customInputs = {
-        immortalParents: ''
-    };
-    
+    state.attainmentCounts = { grandmaster: 0, greatGrandmaster: 0 };
+    state.customInputs = { immortalParents: '' };
     state.disabledSections = [];
+    state.setupComplete = false;
+    
+    saveToLocalStorage();
 }
 
-// Export state for import/export functionality
 export function exportState() {
     return JSON.stringify(state, null, 2);
 }
 
-// Import state
 export function importState(jsonString) {
     try {
         const imported = JSON.parse(jsonString);
         Object.assign(state, imported);
+        saveToLocalStorage();
         return true;
     } catch (error) {
         console.error('Failed to import state:', error);
@@ -201,22 +185,67 @@ export function importState(jsonString) {
     }
 }
 
-// Disable sections
 export function disableSections(sections) {
     state.disabledSections = [...new Set([...state.disabledSections, ...sections])];
+    saveToLocalStorage();
 }
 
-// Enable sections
 export function enableSections(sections) {
     state.disabledSections = state.disabledSections.filter(s => !sections.includes(s));
+    saveToLocalStorage();
 }
 
-// Check if section is disabled
 export function isSectionDisabled(section) {
     return state.disabledSections.includes(section);
 }
 
-// Clear disabled sections
 export function clearDisabledSections() {
     state.disabledSections = [];
+    saveToLocalStorage();
+}
+
+export function markSetupComplete() {
+    state.setupComplete = true;
+    saveToLocalStorage();
+}
+
+// ========== LocalStorage ==========
+export function saveToLocalStorage() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+        console.error('Failed to save to localStorage:', error);
+    }
+}
+
+export function loadFromLocalStorage() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            Object.assign(state, parsed);
+            console.log('✅ Build loaded from localStorage');
+            return true;
+        }
+    } catch (error) {
+        console.error('Failed to load from localStorage:', error);
+    }
+    return false;
+}
+
+export function clearLocalStorage() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+        console.log('✅ localStorage cleared');
+    } catch (error) {
+        console.error('Failed to clear localStorage:', error);
+    }
+}
+
+export function hasLocalStorageData() {
+    try {
+        return localStorage.getItem(STORAGE_KEY) !== null;
+    } catch {
+        return false;
+    }
 }
