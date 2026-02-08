@@ -13,25 +13,7 @@
         <!-- Header -->
         <header class="header">
             <h1>Reverend Insanity CYOA</h1>
-            <p class="subtitle">
-                <strong>CYOA</strong> = <strong>Choose Your Own Adventure</strong><br><br>
-                In the vast expanse of the Gu World, where cultivation reigns supreme and only the strong survive,
-                countless stories unfold.
-                Gu Masters refine mystical insects called Gu to gain supernatural powers, engage in deadly schemes, and
-                pursue immortality.
-                In this world where human nature is laid bare and morality is but a tool for the weak, your journey is
-                about to begin.<br><br>
-                You find yourself with a rare opportunity—the chance to be reborn into this world with foreknowledge and
-                choices that will shape your destiny.
-                Will you walk the righteous path, upholding justice and protecting the weak? Or will you embrace the
-                demonic path, pursuing power at any cost?
-                Perhaps you'll forge your own way, a lone cultivator bound by no faction.<br><br>
-                One night, you drift to sleep in your mundane world, and when you awaken... you are no longer on Earth.
-                The Gu World awaits, and the choices you make here will determine whether you rise to become a
-                Venerable,
-                reshaping heaven and earth itself, or fall as just another stepping stone for the ambitious.<br><br>
-                <strong>Your journey begins now. Choose wisely.</strong>
-            </p>
+            <p class="subtitle">Choose your path and shape your destiny.</p>
         </header>
 
         <!-- Points Display Toolbar (sticky) -->
@@ -105,197 +87,188 @@
             </div>
         </div>
 
-        <!-- Tab Navigation -->
-        <nav id="tab-navigation" class="tab-navigation">
-            <button class="tab-btn active" data-tab="difficulty">Difficulty</button>
-            <button class="tab-btn" data-tab="basics">Basics</button>
-            <button class="tab-btn" data-tab="location">Location</button>
-            <button class="tab-btn" data-tab="aptitude">Aptitude</button>
-            <button class="tab-btn" data-tab="power">Power</button>
-            <button class="tab-btn" data-tab="perks">Perks</button>
-            <button class="tab-btn" data-tab="premium">Premium</button>
-            <button class="tab-btn" data-tab="challenges">Challenges</button>
-            <button class="tab-btn" data-tab="summary">Summary</button>
-        </nav>
+        <!-- Restore tab sections (IDs must match renderer.js) -->
+        <!-- DIFFICULTY TAB -->
+        <div id="tab-difficulty" class="tab-content active">
+            <section class="category">
+                <h2 class="category-title">Difficulty Mode</h2>
+                <p class="category-description">Choose your starting points.</p>
+                <div id="difficulty-options" class="options-grid"></div>
+            </section>
+        </div>
 
-        <!-- Main Content Area -->
-        <main id="cyoa-content">
-            <!-- DIFFICULTY TAB -->
-            <div id="tab-difficulty" class="tab-content active">
-                <section class="category">
-                    <h2 class="category-title">Difficulty Mode</h2>
-                    <p class="category-description">Choose your starting points. Higher difficulty means fewer resources
-                        but greater challenge!</p>
-                    <div id="difficulty-options" class="options-grid"></div>
-                </section>
-            </div>
+        <!-- BASICS TAB -->
+        <div id="tab-basics" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Timeline</h2>
+                <div id="timeline-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="prep-section">
+                <h2 class="category-title">Extra Preparation</h2>
+                <div id="prep-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="race-section">
+                <h2 class="category-title">Race</h2>
+                <div id="race-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="sex-section">
+                <h2 class="category-title">Sex</h2>
+                <div id="sex-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="appearance-section">
+                <h2 class="category-title">Appearance</h2>
+                <div id="appearance-options" class="options-grid"></div>
+            </section>
+            <section class="category">
+                <h2 class="category-title">Special Traits</h2>
+                <div id="special-traits-options" class="options-grid"></div>
+            </section>
+        </div>
 
-            <!-- BASICS TAB -->
-            <div id="tab-basics" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Timeline</h2>
-                    <div id="timeline-options" class="options-grid"></div>
-                </section>
+        <!-- LOCATION TAB -->
+        <div id="tab-location" class="tab-content">
+            <section class="category" id="clan-tier-section">
+                <h2 class="category-title">Clan Tier</h2>
+                <div id="clan-tier-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="clan-status-section" style="display: none;">
+                <h2 class="category-title">Clan Status</h2>
+                <p class="category-description" id="clan-status-desc">Select a clan tier first</p>
+                <div id="clan-status-options" class="options-grid"></div>
+            </section>
+            <section class="category" id="special-birth-section">
+                <h2 class="category-title">Special Birth</h2>
+                <div id="special-birth-options" class="options-grid"></div>
+            </section>
+        </div>
 
-                <section class="category" id="prep-section">
-                    <h2 class="category-title">Extra Preparation</h2>
-                    <div id="prep-options" class="options-grid"></div>
-                </section>
-
-                <section class="category" id="race-section">
-                    <h2 class="category-title">Race</h2>
-                    <div id="race-options" class="options-grid"></div>
-                </section>
-
-                <section class="category" id="sex-section">
-                    <h2 class="category-title">Sex</h2>
-                    <div id="sex-options" class="options-grid"></div>
-                </section>
-
-                <section class="category" id="appearance-section">
-                    <h2 class="category-title">Appearance</h2>
-                    <div id="appearance-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Special Traits</h2>
-                    <div id="special-traits-options" class="options-grid"></div>
-                </section>
-            </div>
-
-            <!-- LOCATION TAB -->
-            <div id="tab-location" class="tab-content">
-                <section class="category" id="clan-tier-section">
-                    <h2 class="category-title">Clan Tier</h2>
-                    <div id="clan-tier-options" class="options-grid"></div>
-                </section>
-
-                <section class="category" id="clan-status-section" style="display: none;">
-                    <h2 class="category-title">Clan Status</h2>
-                    <p class="category-description" id="clan-status-desc">Select a clan tier first</p>
-                    <div id="clan-status-options" class="options-grid"></div>
-                </section>
-
-                <section class="category" id="special-birth-section">
-                    <h2 class="category-title">Special Birth</h2>
-                    <div id="special-birth-options" class="options-grid"></div>
-                </section>
-            </div>
-
-            <!-- APTITUDE TAB -->
-            <div id="tab-aptitude" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Aptitude</h2>
-                    <div id="aptitude-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Attainments</h2>
-                    <p class="category-description">Choose paths and attainment levels.</p>
-
-                    <div class="attainment-builder">
-                        <div class="attainment-controls">
-                            <label class="input-label" for="attainment-path-select">Path</label>
-                            <select id="attainment-path-select"></select>
-                            <button id="add-master-btn" class="btn btn-primary">Add Master</button>
-                            <button id="add-grandmaster-btn" class="btn btn-primary">Add Grandmaster</button>
-                            <button id="add-greatgm-btn" class="btn btn-primary">Add Great Grandmaster</button>
-                        </div>
-
-                        <div class="attainment-info">
-                            <strong>Limits:</strong>
-                            <span id="gm-count">0/4</span> GM,
-                            <span id="ggm-count">0/2</span> GGM
-                            <span id="no-limits-msg" style="display: none;">(No limits)</span>
-                        </div>
-
-                        <div id="attainment-list" class="attainment-list"></div>
+        <!-- APTITUDE TAB -->
+        <div id="tab-aptitude" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Aptitude</h2>
+                <div id="aptitude-options" class="options-grid"></div>
+            </section>
+            <section class="category">
+                <h2 class="category-title">Attainments</h2>
+                <div class="attainment-builder">
+                    <div class="attainment-controls">
+                        <label class="input-label" for="attainment-path-select">Path</label>
+                        <select id="attainment-path-select"></select>
+                        <button id="add-master-btn" class="btn btn-primary">Add Master</button>
+                        <button id="add-grandmaster-btn" class="btn btn-primary">Add Grandmaster</button>
+                        <button id="add-greatgm-btn" class="btn btn-primary">Add Great Grandmaster</button>
                     </div>
-                </section>
-            </div>
-
-            <!-- POWER TAB -->
-            <div id="tab-power" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Luck</h2>
-                    <div id="luck-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Soul Foundation</h2>
-                    <div id="soul-options" class="options-grid"></div>
-                </section>
-
-                <section class="category">
-                    <h2 class="category-title">Venerable Inheritances</h2>
-                    <div id="venerable-options" class="options-grid"></div>
-                </section>
-            </div>
-
-            <!-- PERKS TAB -->
-            <div id="tab-perks" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Grab Bag Bundles</h2>
-                    <div id="grab-bag-bundle-options" class="options-grid"></div>
-
-                    <div class="attainment-builder">
-                        <div class="attainment-info">
-                            Selected: <span id="grab-selected">0</span> /
-                            <span id="grab-max">0</span>
-                        </div>
-                        <div id="grab-bag-items" class="grab-bag-grid"></div>
+                    <div class="attainment-info">
+                        <strong>Limits:</strong>
+                        <span id="gm-count">0/4</span> GM,
+                        <span id="ggm-count">0/2</span> GGM
+                        <span id="no-limits-msg" style="display: none;">(No limits)</span>
                     </div>
-                </section>
+                    <div id="attainment-list" class="attainment-list"></div>
+                </div>
+            </section>
+        </div>
 
-                <div id="tier1-section"></div>
-                <div id="tier2-section"></div>
-                <div id="tier3-section"></div>
-                <div id="tier4-section"></div>
-                <div id="tier5-section"></div>
-            </div>
+        <!-- POWER TAB -->
+        <div id="tab-power" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Luck</h2>
+                <div id="luck-options" class="options-grid"></div>
+            </section>
+            <section class="category">
+                <h2 class="category-title">Soul Foundation</h2>
+                <div id="soul-options" class="options-grid"></div>
+            </section>
+            <section class="category">
+                <h2 class="category-title">Venerable Inheritances</h2>
+                <div id="venerable-options" class="options-grid"></div>
+            </section>
+        </div>
 
-            <!-- PREMIUM TAB -->
-            <div id="tab-premium" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Premium Gu Worms</h2>
-                    <div id="premium-gu-options" class="options-grid"></div>
-                </section>
-            </div>
+        <!-- PERKS TAB -->
+        <div id="tab-perks" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Grab Bag Bundles</h2>
+                <div id="grab-bag-bundle-options" class="options-grid"></div>
+                <div class="attainment-builder">
+                    <div class="attainment-info">
+                        Selected: <span id="grab-selected">0</span> /
+                        <span id="grab-max">0</span>
+                    </div>
+                    <div id="grab-bag-items" class="grab-bag-grid"></div>
+                </div>
+            </section>
+            <div id="tier1-section"></div>
+            <div id="tier2-section"></div>
+            <div id="tier3-section"></div>
+            <div id="tier4-section"></div>
+            <div id="tier5-section"></div>
+        </div>
 
-            <!-- CHALLENGES TAB -->
-            <div id="tab-challenges" class="tab-content">
-                <section class="category">
-                    <h2 class="category-title">Missions</h2>
-                    <div id="missions-options" class="options-grid"></div>
-                </section>
+        <!-- PREMIUM TAB -->
+        <div id="tab-premium" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Premium Gu Worms</h2>
+                <div id="premium-gu-options" class="options-grid"></div>
+            </section>
+        </div>
 
-                <section class="category">
-                    <h2 class="category-title">Drawbacks</h2>
-                    <div id="drawbacks-options" class="options-grid"></div>
-                </section>
-            </div>
+        <!-- CHALLENGES TAB -->
+        <div id="tab-challenges" class="tab-content">
+            <section class="category">
+                <h2 class="category-title">Missions</h2>
+                <div id="missions-options" class="options-grid"></div>
+            </section>
+            <section class="category">
+                <h2 class="category-title">Drawbacks</h2>
+                <div id="drawbacks-options" class="options-grid"></div>
+            </section>
+        </div>
 
-            <!-- SUMMARY TAB -->
-            <div id="tab-summary" class="tab-content">
-                <section class="summary-section">
-                    <div id="summary-content"></div>
-                </section>
-            </div>
-        </main>
+        <!-- SUMMARY TAB -->
+        <div id="tab-summary" class="tab-content">
+            <section class="summary-section">
+                <div id="summary-content"></div>
+            </section>
+        </div>
 
         <!-- Credits Footer -->
         <footer class="credits-footer">
             <div class="credits-section">
                 <h2 class="credits-title">Credits</h2>
+                
+                <div class="credits-license">
+                    <p>License: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution Share-Alike 4.0 International License</a></p>
+                </div>
 
-                <div class="credits-license"></div>
+                <div class="credits-block">
+                    <h3>Original CYOA Authors</h3>
+                    <p>
+                        <a href="https://www.reddit.com/user/alphanumericsprawl/" target="_blank">u/alphanumericsprawl</a> - Original Reverend Insanity CYOA<br>
+                        <a href="https://www.reddit.com/user/GashGrunt/" target="_blank">u/GashGrunt</a> - Contributions and expansions<br>
+                        <a href="https://www.reddit.com/user/smie27/" target="_blank">u/smie27</a> - Contributions and expansions<br>
+                    </p>
+                </div>
 
-                <div class="credits-block"></div>
-                <div class="credits-block"></div>
-                <div class="credits-block"></div>
-                <div class="credits-block"></div>
+                <div class="credits-block">
+                    <h3>Premium Gu Contributors</h3>
+                    <p>
+                        <a href="https://www.reddit.com/user/unlanned/" target="_blank">u/unlanned</a> - Chaos Flame Gu, Universal Solvent Gu, Self Oppression Gu, Heaven's on Central Time<br>
+                        <a href="https://www.reddit.com/user/WHOiAM981213/" target="_blank">u/WHOiAM981213</a> - Mobile Formation Immortal Gu, Innate Strength Immortal Gu, Partial Transformation Immortal Gu
+                    </p>
+                </div>
 
-                <div class="credits-note"></div>
+                <div class="credits-block">
+                    <h3>Source Material</h3>
+                    <p>
+                        <strong>Reverend Insanity (蛊真人)</strong><br>
+                        Original Novel: Gu Zhen Ren (蛊真人)<br>
+                    </p>
+                </div>
+
+                <div class="credits-note">
+                    <p><em>If you feel that credit hasn't been given to a contributor or you are a contributor who hasn't been credited, please reach out via Reddit or Discord.</em></p>
+                </div>
             </div>
         </footer>
     </div>
