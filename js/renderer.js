@@ -81,6 +81,9 @@ function selectMode(mode) {
    Main Rendering Pipeline
    ========================= */
 export function renderAllContent() {
+    // First inject category descriptions from data
+    injectCategoryDescriptions();
+    
     renderBasicsTab();
     renderLocationTab();
     renderAptitudeTab();
@@ -88,6 +91,57 @@ export function renderAllContent() {
     renderPerksTab();
     renderPremiumTab();
     renderChallengesTab();
+}
+
+/* =========================
+   Inject Category Descriptions
+   ========================= */
+function injectCategoryDescriptions() {
+    const mappings = {
+        'timeline': 'timeline-options',
+        'specialTraits': 'special-traits-options',
+        'clanTier': 'clan-tier-options',
+        'aptitude': 'aptitude-options',
+        'luck': 'luck-options',
+        'soul': 'soul-options',
+        'venerable': 'venerable-options',
+        'premiumGu': 'premium-gu-options',
+        'missions': 'missions-options',
+        'drawbacks': 'drawbacks-options'
+    };
+    
+    for (const [categoryKey, elementId] of Object.entries(mappings)) {
+        const categoryData = CYOA_DATA.categories[categoryKey];
+        if (!categoryData) continue;
+        
+        const container = document.getElementById(elementId);
+        if (!container) continue;
+        
+        const section = container.closest('.category');
+        if (!section) continue;
+        
+        // Remove existing description if any
+        const existingDesc = section.querySelector('.category-description');
+        if (existingDesc) {
+            existingDesc.remove();
+        }
+        
+        // Add new description if it exists in data
+        if (categoryData.description) {
+            const title = section.querySelector('.category-title');
+            if (title) {
+                const desc = createEl('p', 'category-description');
+                desc.textContent = categoryData.description;
+                
+                // Add warning class for missions/drawbacks
+                if (categoryKey === 'missions' || categoryKey === 'drawbacks') {
+                    desc.classList.add('warning');
+                }
+                
+                title.insertAdjacentElement('afterend', desc);
+            }
+        }
+    }
 }
 
 /* =========================
