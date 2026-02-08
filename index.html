@@ -176,27 +176,77 @@
                     <div id="clan-status-options" class="options-grid"></div>
                 </section>
 
-                <section class="category">
+                <section class="category" id="special-birth-section">
                     <h2 class="category-title">Special Birth</h2>
+                    <div id="special-birth-options" class="options-grid"></div>
                 </section>
             </div>
 
             <!-- APTITUDE TAB -->
             <div id="tab-aptitude" class="tab-content">
-                <section class="category"></section>
-                <section class="category"></section>
+                <section class="category">
+                    <h2 class="category-title">Aptitude</h2>
+                    <div id="aptitude-options" class="options-grid"></div>
+                </section>
+
+                <section class="category">
+                    <h2 class="category-title">Attainments</h2>
+                    <p class="category-description">Choose paths and attainment levels.</p>
+
+                    <div class="attainment-builder">
+                        <div class="attainment-controls">
+                            <label class="input-label" for="attainment-path-select">Path</label>
+                            <select id="attainment-path-select"></select>
+                            <button id="add-master-btn" class="btn btn-primary">Add Master</button>
+                            <button id="add-grandmaster-btn" class="btn btn-primary">Add Grandmaster</button>
+                            <button id="add-greatgm-btn" class="btn btn-primary">Add Great Grandmaster</button>
+                        </div>
+
+                        <div class="attainment-info">
+                            <strong>Limits:</strong>
+                            <span id="gm-count">0/4</span> GM,
+                            <span id="ggm-count">0/2</span> GGM
+                            <span id="no-limits-msg" style="display: none;">(No limits)</span>
+                        </div>
+
+                        <div id="attainment-list" class="attainment-list"></div>
+                    </div>
+                </section>
             </div>
 
             <!-- POWER TAB -->
             <div id="tab-power" class="tab-content">
-                <section class="category"></section>
-                <section class="category"></section>
-                <section class="category"></section>
+                <section class="category">
+                    <h2 class="category-title">Luck</h2>
+                    <div id="luck-options" class="options-grid"></div>
+                </section>
+
+                <section class="category">
+                    <h2 class="category-title">Soul Foundation</h2>
+                    <div id="soul-options" class="options-grid"></div>
+                </section>
+
+                <section class="category">
+                    <h2 class="category-title">Venerable Inheritances</h2>
+                    <div id="venerable-options" class="options-grid"></div>
+                </section>
             </div>
 
             <!-- PERKS TAB -->
             <div id="tab-perks" class="tab-content">
-                <section class="category"></section>
+                <section class="category">
+                    <h2 class="category-title">Grab Bag Bundles</h2>
+                    <div id="grab-bag-bundle-options" class="options-grid"></div>
+
+                    <div class="attainment-builder">
+                        <div class="attainment-info">
+                            Selected: <span id="grab-selected">0</span> /
+                            <span id="grab-max">0</span>
+                        </div>
+                        <div id="grab-bag-items" class="grab-bag-grid"></div>
+                    </div>
+                </section>
+
                 <div id="tier1-section"></div>
                 <div id="tier2-section"></div>
                 <div id="tier3-section"></div>
@@ -206,18 +256,30 @@
 
             <!-- PREMIUM TAB -->
             <div id="tab-premium" class="tab-content">
-                <section class="category"></section>
+                <section class="category">
+                    <h2 class="category-title">Premium Gu Worms</h2>
+                    <div id="premium-gu-options" class="options-grid"></div>
+                </section>
             </div>
 
             <!-- CHALLENGES TAB -->
             <div id="tab-challenges" class="tab-content">
-                <section class="category"></section>
-                <section class="category"></section>
+                <section class="category">
+                    <h2 class="category-title">Missions</h2>
+                    <div id="missions-options" class="options-grid"></div>
+                </section>
+
+                <section class="category">
+                    <h2 class="category-title">Drawbacks</h2>
+                    <div id="drawbacks-options" class="options-grid"></div>
+                </section>
             </div>
 
             <!-- SUMMARY TAB -->
             <div id="tab-summary" class="tab-content">
-                <section class="summary-section"></section>
+                <section class="summary-section">
+                    <div id="summary-content"></div>
+                </section>
             </div>
         </main>
 
