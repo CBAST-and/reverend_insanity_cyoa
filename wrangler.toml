@@ -1,0 +1,10 @@
+# Configuración de Cloudflare Pages + D1.
+name = "reverend-insanity-cyoa"
+compatibility_date = "2026-06-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ri-cyoa"
+database_id = "405fa129-527a-4d31-b52d-83593dcda5dc"
+migrations_dir = "migrations"
