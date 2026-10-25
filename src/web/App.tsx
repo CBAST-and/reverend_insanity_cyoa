@@ -99,7 +99,7 @@ function reducer(state: State, action: AppAction): State {
 
 /* ------------------------------ Componentes ------------------------------ */
 
-const formatCost = (cost: number): string => (cost > 0 ? `+${cost}` : String(cost));
+const formatCost = (cost: number): string => (cost > 0 ? `+${cost}` : cost < 0 ? `−${-cost}` : '0');
 
 function OptionCard(props: {
   readonly option: CyoaOption;
@@ -129,22 +129,24 @@ function OptionCard(props: {
   };
 
   return (
-    <div className="card" role="group" aria-label={option.name}>
+    <div className="entry" role="group" aria-label={option.name} data-selected={selected || granted} data-blocked={blocked}>
       <button
         type="button"
-        className="card"
-        style={{ border: 0, padding: 0, background: 'none' }}
+        className="entry-main"
         aria-pressed={selected || granted}
         aria-disabled={blocked}
         onClick={onClick}
       >
-        <span className="name">
-          <span>{option.name}</span>
-          <span className={option.cost > 0 ? 'cost gain' : 'cost'}>{formatCost(option.cost)} CP</span>
+        <span className="entry-name">{option.name}</span>
+        <span className="entry-cost" data-sign={option.cost > 0 ? 'gain' : 'spend'}>
+          {formatCost(option.cost)}
         </span>
-        {granted && <span className="tag">Gratis por otra opción</span>}
-        <span className="desc">{option.description}</span>
+        <span className="entry-desc">{option.description}</span>
+        {granted && <span className="entry-note">Gratis por otra opción</span>}
       </button>
+      <span className="seal" aria-hidden="true">
+        蛊
+      </span>
       {option.repeatable === true && selected && (
         <div className="count">
           <button type="button" aria-label="Quitar una" onClick={() => setCount((state?.count ?? 1) - 1)}>
@@ -157,7 +159,7 @@ function OptionCard(props: {
         </div>
       )}
       {option.input !== undefined && selected && (
-        <label className="desc">
+        <label className="desc extras">
           {option.input.label}
           <textarea
             rows={3}
@@ -304,7 +306,7 @@ function Summary(props: { readonly evaluation: BuildEvaluation }): ReactElement 
       {evaluation.lines.length === 0 ? (
         <p className="desc">Todavía no elegiste nada.</p>
       ) : (
-        <table>
+        <table className="ledger">
           <tbody>
             {evaluation.lines.map((line, position) => (
               <tr key={`${line.kind}-${position}`}>
@@ -328,6 +330,26 @@ function Summary(props: { readonly evaluation: BuildEvaluation }): ReactElement 
   );
 }
 
+type Tab = CategoryKey | 'attainments' | 'summary';
+
+/** Cuántas elecciones y cuántos puntos lleva cada sección (alimenta la barra lateral). */
+function sectionTotals(evaluation: BuildEvaluation): Map<Tab, { count: number; total: number }> {
+  const totals = new Map<Tab, { count: number; total: number }>();
+  for (const line of evaluation.lines) {
+    const key: Tab =
+      line.kind === 'option' || line.kind === 'surcharge'
+        ? line.categoryKey
+        : line.kind === 'clanStatus'
+          ? 'clanTier'
+          : 'attainments';
+    const entry = totals.get(key) ?? { count: 0, total: 0 };
+    entry.total += line.total;
+    if ((line.kind === 'option' && !line.granted) || line.kind === 'attainment') entry.count += 1;
+    totals.set(key, entry);
+  }
+  return totals;
+}
+
 /* ------------------------------ Aplicación ------------------------------ */
 
 const messageOf = (error: unknown): string =>
@@ -342,8 +364,9 @@ export default function App(): ReactElement {
   const [state, dispatch] = useReducer(reducer, null, (): State => ({ selections: loadSaved(), notice: null }));
   const [session, setSession] = useState<Session>({ id: null, token: null });
   const [busy, setBusy] = useState(false);
-  const [tab, setTab] = useState<CategoryKey | 'attainments' | 'summary'>('timeline');
+  const [tab, setTab] = useState<Tab>('timeline');
   const evaluation = useMemo(() => evaluateBuild(content, state.selections), [state.selections]);
+  const totals = useMemo(() => sectionTotals(evaluation), [evaluation]);
 
   // El borrador local solo se guarda mientras no se está viendo un build compartido.
   useEffect(() => {
@@ -419,24 +442,55 @@ export default function App(): ReactElement {
 
   const category = tab === 'summary' || tab === 'attainments' ? null : content.categories[tab];
 
+  const tabButton = (id: Tab, label: string): ReactElement => {
+    const entry = totals.get(id);
+    return (
+      <button
+        key={id}
+        type="button"
+        role="tab"
+        className="tab"
+        aria-selected={tab === id}
+        aria-label={entry === undefined || entry.count === 0 ? label : `${label}, ${entry.count} elegidas`}
+        onClick={() => setTab(id)}
+      >
+        <span>{label}</span>
+        {entry !== undefined && entry.count > 0 && <span className="num">{formatCost(entry.total)}</span>}
+      </button>
+    );
+  };
+
   return (
-    <>
-      <header className="top">
-        <h1>Reverend Insanity CYOA</h1>
+    <div className="sheet">
+      <aside className="rail">
+        <div>
+          <h1 className="brand">Reverend Insanity</h1>
+          <p className="brand-sub">Hoja de personaje</p>
+        </div>
+
+        <div>
+          <p className={evaluation.availablePoints < 0 ? 'points over' : 'points'} aria-live="polite">
+            {evaluation.availablePoints}
+          </p>
+          <p className="points-label">puntos disponibles</p>
+        </div>
+
         <div className="modes" role="group" aria-label="Dificultad">
           {content.modes.map((mode) => (
             <button
               key={mode.id}
               type="button"
-              className="chip"
+              className="mode"
               aria-pressed={state.selections.modeId === mode.id}
               title={mode.description}
               onClick={() => dispatch({ type: 'setMode', modeId: mode.id })}
             >
-              {mode.name} · {mode.points}
+              <span>{mode.name}</span>
+              <span className="num">{mode.points}</span>
             </button>
           ))}
         </div>
+
         <div className="actions">
           <button type="button" className="chip" disabled={busy} onClick={() => void save()}>
             {session.token !== null ? 'Guardar cambios' : 'Guardar y compartir'}
@@ -460,35 +514,17 @@ export default function App(): ReactElement {
               Nuevo
             </button>
           )}
-          {session.id !== null && session.token === null && (
-            <span className="desc">Solo lectura: al guardar se crea tu propia copia.</span>
-          )}
         </div>
-        <div className={evaluation.availablePoints < 0 ? 'points neg' : 'points'} aria-live="polite">
-          {evaluation.availablePoints} CP
-        </div>
-      </header>
+        {session.id !== null && session.token === null && (
+          <p className="desc">Solo lectura: al guardar se crea tu propia copia.</p>
+        )}
 
-      <nav className="tabs" role="tablist" aria-label="Secciones">
-        {CATEGORY_ORDER.map((key) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            className="tab"
-            aria-selected={tab === key}
-            onClick={() => setTab(key)}
-          >
-            {content.categories[key].title}
-          </button>
-        ))}
-        <button type="button" role="tab" className="tab" aria-selected={tab === 'attainments'} onClick={() => setTab('attainments')}>
-          Attainments
-        </button>
-        <button type="button" role="tab" className="tab" aria-selected={tab === 'summary'} onClick={() => setTab('summary')}>
-          Resumen
-        </button>
-      </nav>
+        <nav className="sections" role="tablist" aria-orientation="vertical" aria-label="Secciones">
+          {CATEGORY_ORDER.map((key) => tabButton(key, content.categories[key].title))}
+          {tabButton('attainments', 'Attainments')}
+          {tabButton('summary', 'Resumen')}
+        </nav>
+      </aside>
 
       <main>
         {tab === 'summary' ? (
@@ -499,7 +535,7 @@ export default function App(): ReactElement {
           <section role="tabpanel" aria-label={category.title}>
             <h2>{category.title}</h2>
             {category.description !== undefined && <p className="desc">{category.description}</p>}
-            <div className="grid">
+            <div className="entries">
               {category.options.map((option) => (
                 <OptionCard
                   key={option.id}
@@ -515,27 +551,27 @@ export default function App(): ReactElement {
             {tab === 'grabBagBundles' && <GrabBagPicker selections={state.selections} evaluation={evaluation} dispatch={dispatch} />}
           </section>
         )}
-      </main>
 
-      <footer className="credits">
-        <p>
-          Basado en el CYOA de alphanumericsprawl, con contribuciones de GashGrunt y smie27. Premium Gu de unlanned y
-          WHOiAM981213. Versión interactiva original de WiseBein. Sobre la novela Reverend Insanity de Gu Zhen Ren.
-        </p>
-        <p>
-          Contenido bajo{' '}
-          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer noopener">
-            CC BY-SA 4.0
-          </a>
-          .
-        </p>
-      </footer>
+        <footer className="credits">
+          <p>
+            Basado en el CYOA de alphanumericsprawl, con contribuciones de GashGrunt y smie27. Premium Gu de unlanned y
+            WHOiAM981213. Versión interactiva original de WiseBein. Sobre la novela Reverend Insanity de Gu Zhen Ren.
+          </p>
+          <p>
+            Contenido bajo{' '}
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer noopener">
+              CC BY-SA 4.0
+            </a>
+            .
+          </p>
+        </footer>
+      </main>
 
       {state.notice !== null && (
         <div className="notice" role="status">
           {state.notice}
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { buildIdFromPath, fetchBuild } from './api';
 import { setContent } from './content-store';
 import { loadContent } from '../shared';
+import '@fontsource/zen-old-mincho/latin-500.css';
+import '@fontsource/zen-old-mincho/latin-700.css';
+import '@fontsource/atkinson-hyperlegible/latin-400.css';
+import '@fontsource/atkinson-hyperlegible/latin-700.css';
 import './styles.css';
 
 /** Carga el contenido publicado; si la URL es /b/:id, el de la versión con la que se creó ese build. */
