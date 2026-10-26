@@ -69,7 +69,7 @@ deployment) is in [`docs/DESARROLLO.md`](docs/DESARROLLO.md), written in Spanish
     npm test
     npm run dev:full
 
-## License and credits
+## License and credits 
 
 The CYOA content is distributed under
 [Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
