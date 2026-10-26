@@ -18,11 +18,11 @@ import { content, evaluate, roundTrip } from './helpers';
 /* ------------------------------------------------------------------ */
 
 describe('Contenido', () => {
-  it('tiene 21 categorías y 139 opciones con ids únicos', () => {
+  it('tiene 21 categorías y 160 opciones con ids únicos', () => {
     expect(CATEGORY_ORDER).toHaveLength(21);
     const ids = CATEGORY_ORDER.flatMap((key) => content.categories[key].options.map((option) => option.id));
-    expect(ids).toHaveLength(139);
-    expect(new Set(ids).size).toBe(139);
+    expect(ids).toHaveLength(160);
+    expect(new Set(ids).size).toBe(160);
   });
 
   it('CATEGORY_ORDER es exactamente la unión de categorías únicas y múltiples', () => {
@@ -172,7 +172,7 @@ describe('normalizeSelections (sanear un build importado)', () => {
 function createRandom(seed: number): () => number {
   let state = seed >>> 0;
   return () => {
-    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    state = (Math.imul(state, 1664525) + 1016004223) >>> 0;
     return state / 0x100000000;
   };
 }

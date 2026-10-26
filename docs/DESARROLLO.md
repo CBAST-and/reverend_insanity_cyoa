@@ -14,7 +14,7 @@ Estado: **en producción** en https://reverend-insanity-cyoa.pages.dev (motor, D
 
 ## Estructura
 
-    content/content.json            Contenido validado (130 opciones, 21 categorías)
+    content/content.json            Contenido validado (160 opciones, 21 categorías)
     scripts/convert-legacy-data.ts  Conversión desde el data.js anterior
     src/shared/schema.ts            Esquemas Zod; los tipos salen de aquí
     src/shared/content.ts           loadContent: forma + integridad referencial
@@ -57,6 +57,7 @@ viven en una sola función; `applyAction` y `normalizeSelections` la reutilizan.
 `content/content.json` es hoy la fuente de verdad y se edita a mano (o con el admin). El script
 `scripts/convert-legacy-data.ts` solo sirvió para la migración inicial desde `data.js`.
 Las opciones de alphanumericsprawl (que parte de 20 puntos) se escalan x50 para llegar a 1000.
+La comparación completa con los tres CYOA de origen está en `docs/CONTENT_REVIEW.md`.
 Los ids de camino van en minúscula; la interfaz los muestra como "Blood Path" (`src/web/labels.ts`).
 
 ## Supuestos a confirmar contra el CYOA original

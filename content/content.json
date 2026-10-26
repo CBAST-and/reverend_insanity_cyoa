@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026-10-25.1",
+  "contentVersion": "2026-10-26.1",
   "modes": [
     {
       "id": "venerable",
@@ -103,7 +103,7 @@
         {
           "id": "timeline-first",
           "name": "First Timeline",
-          "description": "Born November 11th, same time as Fang Yuan. Spectral Soul succeeds, Spring Autumn Cicada never refined. Fang Yuan becomes demonic powerhouse with blood deity.",
+          "description": "You are born on the 11th of November the same time as Fang Yuan. Some 17 years later Fang Yuan is forced to join a caravan and leaves Qing Mao mountain. Spectral Soul's heaven defying plan succeeds, however Spring Autumn Cicada is never refined instead Fang Yuan refines blood deity and becomes a demonic powerhouse.",
           "cost": 150
         },
         {
@@ -126,6 +126,18 @@
             "clanStatus",
             "specialBirth"
           ]
+        },
+        {
+          "id": "timeline-righteous",
+          "name": "Late Antiquity Righteous Era",
+          "cost": 150,
+          "description": "You are born many years after Spectral Soul's demon venerable's death. Shadow Sect has not been created yet and the rise of an immortal venerable is inevitable. Soul path is flourishing and the demonic path has a foothold in the mainstream, but the tides will turn with the birth of paradise earth. Cultivate to your heart's desire."
+        },
+        {
+          "id": "timeline-demonic",
+          "name": "Late Antiquity Demonic Era",
+          "cost": 250,
+          "description": "You are born at the end of the medieval antiquity era. Giant Sun immortal venerable is dead and the Huang Jin tribes are flourishing in northern plains. Soul path has yet to be created and a murderous demon venerable is inevitably going to rise. May you leave a footprint in history."
         }
       ]
     },
@@ -756,6 +768,18 @@
           "name": "Great Love",
           "description": "You become a grandmaster in social manipulation, reading people, manipulating agreements, and expressing false sincerity",
           "cost": -100
+        },
+        {
+          "id": "tier2-wealthfood",
+          "name": "Wealth of Food",
+          "cost": -100,
+          "description": "Upon immortal ascension a resource point is created inside your aperture for each rank 6 immortal Gu. Each resource point produces food for a corresponding immortal Gu."
+        },
+        {
+          "id": "tier2-yearpool",
+          "name": "Year Essence Pool",
+          "cost": -100,
+          "description": "Your immortal aperture gains a year essence pool. This is an environment mimicking the river of time, that exist parallelly to your aperture. Meaning that the year essence pool doesn't take up any space in your aperture. The year essence pool also allows you to control the size of the tributary of the river of time flowing into your aperture. Meaning that you can slow the time of your aperture to anywhere between the time you rolled for, in the immortal ascension section, and that of the five regions. Wealth of Food -100 CP Upon immortal ascension a resource point is created inside your aperture for each rank 6 immortal Gu. Each resource point produces food for a corresponding immortal Gu."
         }
       ]
     },
@@ -778,14 +802,35 @@
         {
           "id": "tier3-reinforced",
           "name": "Reinforced Physique",
-          "description": "If you have an extreme physique, you suffer none of the downsides. Your ascension will be on the high end of what a normal immortal might experience, relatively tame compared to ten extreme physiques. After this Heaven's will isn't going to hold back.",
+          "description": "If you have an extreme physique you suffer none of the down sides. You will not need to fear exploding by cultivating too high in the mortal ranks. You won't need an immortal Gu corresponding to your physique to ascend. You will soar through the mortal ranks. Your ascension will be on the high end of what a normal immortal might experience, so relatively tame compared to ten extreme physiques. After this Heaven's will isn't going to hold back on tribulation.",
           "cost": -150
         },
         {
           "id": "tier3-autobalance",
           "name": "Auto Balancer",
-          "description": "When undergoing immortal ascension, your Heaven, Earth, and Human Qi will automatically be balanced for you. It's guaranteed that you will pass immortal ascension.",
+          "description": "When undergoing immortal ascension your Heaven, Earth and Human Qi will automatically be balanced for you. It's guaranteed that you will pass immortal ascension, the only thing that can stop your ascension is being killed by the tribulation itself or outside influences.",
           "cost": -150
+        },
+        {
+          "id": "tier3-dreamrealm",
+          "name": "Dream Realm",
+          "cost": -150,
+          "description": "A dream realm appears at a time and location of your choosing. It will contain true meaning pertaining to a path of your choice. It will be big enough for one person to achieve great grandmaster attainment and another one to achieve grandmaster attainment, or for three people to attain grandmaster attainment."
+        },
+        {
+          "id": "tier3-killermoves",
+          "name": "Immortal Killer Moves",
+          "cost": -150,
+          "description": "You can choose 10 immortal killer moves. You learn the lowest to the highest rank possible of these killer moves. You can pick the same killer move more than once. This means that if you picked time cutting edge you can learn it again when it disappears from your memories."
+        },
+        {
+          "id": "tier3-daophysique",
+          "name": "Dao Physique",
+          "cost": -150,
+          "description": "Don't pick anything in the aptitude section. Choose a path, you now have an extreme physique equivalent in that path. Meaning, if you chose sword path, you would have a sword path physique with all the benefits and drawbacks of a normal extreme physique.",
+          "disables": [
+            "aptitude"
+          ]
         }
       ]
     },
@@ -843,6 +888,18 @@
           "name": "Pocket Paradise",
           "description": "You obtain an orb containing a blessed land, choosing the path for this land. The orb is portable and can be stored within your aperture. Upon activation outside the aperture, the orb becomes immobile. Once placed, the orb functions as a blessed land with a controlled land spirit. When not in use, you can deactivate the orb and return it to your aperture. The orb supplies the blessed land with heaven and earth Qi, allowing you to move it to any of the five regions without issues. The blessed land has an interior size of 7,000 m², and time moves 40 times faster than in the Gu world. It generates resources related to the chosen path of the blessed land. The blessed land is a paradise and remains free from tribulations. It has robust resource production, yielding 50 immortal essence stones annually, with ample room for further development.",
           "cost": -300
+        },
+        {
+          "id": "tier4-guhouse",
+          "name": "Gu House",
+          "cost": -250,
+          "description": "Choose 5 immortal Gu houses, you gain the blueprint of how to create each of these Gu houses."
+        },
+        {
+          "id": "tier4-imperialstaff",
+          "name": "Imperial Staff",
+          "cost": -250,
+          "description": "You gain a staff with three teleportation opportunities. You have three opportunities to teleport to any place mentioned in the novel that exist in your era. Except you cannot go to the 9th layer of crazed demon cave."
         }
       ]
     },
@@ -1014,7 +1071,7 @@
         {
           "id": "mission-kill",
           "name": "Problem? KILL!",
-          "description": "Destroy a super force. You don't have to kill all the members of that force, although it would be a good idea. You simply have to make it so that the super force doesn't exist anymore.",
+          "description": "Destroy a super force. You don't have to kill all the members of that force, although it would be a good idea. You simply have to make it so that the super force doesn't exist anymore. This also counts if you can convince someone to exterminate for you, by trickery, commission, or other means.",
           "cost": 150
         },
         {
@@ -1064,6 +1121,61 @@
           "name": "Eliminate Dao Guardian",
           "description": "Your mission is to personally kill a Dao Guardian. If a Dao Guardian is killed without your direct involvement, you fail.",
           "cost": 100
+        },
+        {
+          "id": "mission-extratime",
+          "name": "Extra Time",
+          "cost": -50,
+          "description": "You gain 200 more years of time to accomplish your missions."
+        },
+        {
+          "id": "mission-imperialcourt",
+          "name": "Imperial Court",
+          "cost": 100,
+          "description": "Enter the imperial court blessed land at least once."
+        },
+        {
+          "id": "mission-grandtheft",
+          "name": "Grand Theft Gu",
+          "cost": 200,
+          "description": "Obtain Sovereign Immortal Fetus Gu. With the time limit, you would probably have to complete this mission by either stealing it from Spectral Soul at Yi tian mountain. Or, you could refine it again using it's user, be it Spectral Soul or Fang Yuan, as a refinement material."
+        },
+        {
+          "id": "mission-becomevenerable",
+          "name": "Become Venerable",
+          "cost": 200,
+          "description": "Break through the heavenly dao blockade and become venerable. Heaven's Will isn't interested in you becoming venerable so you have to destroy or control Fate Gu. You only have 300 years though, so you have to be very quick."
+        },
+        {
+          "id": "mission-supremacy",
+          "name": "Supremacy",
+          "cost": 400,
+          "description": "As a variant human, make your race dominant in the five regions. You have a 10.000 year time limit.",
+          "requires": [
+            "race-variant"
+          ]
+        },
+        {
+          "id": "mission-pseudovenerable",
+          "name": "Pseudo Venerable",
+          "cost": 150,
+          "description": "You must reach pseudo venerable battle strength in all of your aspects of combat. I.e., having pseudo venerable defensive methods isn't enough. Only available with the Late Antiquity Righteous Era or Late Antiquity Demonic Era timeline.",
+          "conflicts": [
+            "timeline-first",
+            "timeline-second",
+            "timeline-alternative"
+          ]
+        },
+        {
+          "id": "mission-daoopponent",
+          "name": "Dao Opponent",
+          "cost": 150,
+          "description": "Defeat one of the coming venerables in battle. You must not be more than one rank above then when you defeat them, and you must not fight them while having immortal level cultivation while they are still mortal. Only available with the Late Antiquity Righteous Era or Late Antiquity Demonic Era timeline.",
+          "conflicts": [
+            "timeline-first",
+            "timeline-second",
+            "timeline-alternative"
+          ]
         }
       ]
     },
@@ -1074,7 +1186,7 @@
         {
           "id": "draw-nospoilers",
           "name": "No Spoilers",
-          "description": "You cannot share the contents of Reverend Insanity with anyone.",
+          "description": "You cannot share the contents of Reverend Insanity with anyone. You may still act on the information but you may not try to explain it to others.",
           "cost": 50
         },
         {
@@ -1113,7 +1225,7 @@
         {
           "id": "draw-daodunce",
           "name": "Dao Dunce",
-          "description": "You cannot increase your attainment level beyond what you buy in this character creator.",
+          "description": "You cannot increase your attainment level beyond what you buy in this character creator. Unless you buy prodigy, then you can become supreme grandmaster in that chosen path.",
           "cost": 300
         },
         {
@@ -1193,6 +1305,44 @@
           "name": "Benefits Addict",
           "description": "You become excessively greedy. While this increases your will to fight and work hard, it also makes you more of a risk-taker and somewhat more easily manipulated (bribery). You are unwilling to sacrifice your wealth.",
           "cost": 150
+        },
+        {
+          "id": "draw-localdao",
+          "name": "Local Dao",
+          "cost": 100,
+          "description": "You are no longer an otherworldly demon. You will not have otherworldly dao marks and others cannot figure out your origin no matter what method they use. Not even soul searching you will let them find out you aren't from the Gu world.",
+          "conflicts": [
+            "draw-ofworld"
+          ]
+        },
+        {
+          "id": "draw-weakness",
+          "name": "Weakness",
+          "cost": 100,
+          "description": "Choose one path, you are now twice as vulnerable to that path as you normally would be. You can pick this multiple times.",
+          "repeatable": true
+        },
+        {
+          "id": "draw-inhospitable",
+          "name": "Inhospitable Environment",
+          "cost": 150,
+          "description": "Choose a region, you cannot enter that region. This goes away when the regional walls disappears."
+        },
+        {
+          "id": "draw-clearconscience",
+          "name": "Clear Conscience",
+          "cost": 150,
+          "description": "You cannot knowingly lie, and you are compelled to answer any question asked truthfully.",
+          "conflicts": [
+            "draw-truthbound",
+            "draw-defy"
+          ]
+        },
+        {
+          "id": "draw-forgetme",
+          "name": "Forget Me Now",
+          "cost": 200,
+          "description": "You lose all memory of reading Reverend Insanity upon rebirth. You still remember the options you took in this CYOA, and your previous life. If you picked reading materials in your grab bag it is removed and you can pick another."
         }
       ]
     }
