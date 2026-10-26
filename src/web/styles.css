@@ -142,3 +142,12 @@ input, textarea, select {
   padding: 0.9rem clamp(1rem, 4vw, 3rem); border-bottom: 1px solid var(--line);
 }
 .top + main { margin: 0 auto; }
+
+h3 { margin: 0 0 0.3rem; font: 500 1.4rem/1.25 var(--display); }
+main section + section { margin-top: 2.5rem; }
+.subtabs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.8rem 0 1rem; }
+.subtab {
+  display: flex; gap: 0.6rem; padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: 3px; background: transparent;
+}
+.subtab[aria-selected='true'] { border-color: var(--seal); box-shadow: inset 0 -3px 0 var(--seal); font-weight: 700; }
+.subtab .num { color: var(--muted); }

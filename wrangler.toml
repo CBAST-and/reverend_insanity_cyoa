@@ -1,5 +1,5 @@
 # Configuración de Cloudflare Pages + D1.
-name = "reverend-insanity-cyoa-v2"
+name = "reverend-insanity-cyoa"
 compatibility_date = "2026-06-01"
 pages_build_output_dir = "dist"
 

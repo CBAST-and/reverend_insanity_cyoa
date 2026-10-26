@@ -18,11 +18,11 @@ import { content, evaluate, roundTrip } from './helpers';
 /* ------------------------------------------------------------------ */
 
 describe('Contenido', () => {
-  it('tiene 21 categorías y 130 opciones con ids únicos', () => {
+  it('tiene 21 categorías y 139 opciones con ids únicos', () => {
     expect(CATEGORY_ORDER).toHaveLength(21);
     const ids = CATEGORY_ORDER.flatMap((key) => content.categories[key].options.map((option) => option.id));
-    expect(ids).toHaveLength(130);
-    expect(new Set(ids).size).toBe(130);
+    expect(ids).toHaveLength(139);
+    expect(new Set(ids).size).toBe(139);
   });
 
   it('CATEGORY_ORDER es exactamente la unión de categorías únicas y múltiples', () => {
@@ -79,7 +79,7 @@ describe('loadContent', () => {
     if (first === undefined || second === undefined) throw new Error('fixture inesperado');
     second.id = first.id;
 
-    expect(() => loadContent(broken)).toThrow(/se repite/);
+    expect(() => loadContent(broken)).toThrow(/is repeated/);
   });
 
   it('rechaza campos desconocidos y estructuras incompletas', () => {

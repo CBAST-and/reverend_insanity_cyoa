@@ -23,7 +23,7 @@ async function loadPublishedContent(): Promise<void> {
 
 async function start(): Promise<void> {
   const container = document.getElementById('root');
-  if (container === null) throw new Error('No se encontró el elemento #root');
+  if (container === null) throw new Error('Could not find the #root element');
   const root = createRoot(container);
 
   if (window.location.pathname.startsWith('/admin')) {

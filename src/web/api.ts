@@ -34,7 +34,7 @@ async function request<T>(path: string, init: RequestInit, schema: z.ZodType<T>)
   try {
     response = await fetch(path, init);
   } catch {
-    throw new ApiRequestError(0, 'network', 'No se pudo conectar con el servidor.');
+    throw new ApiRequestError(0, 'network', 'Could not reach the server.');
   }
 
   const payload: unknown = await response.json().catch(() => null);
@@ -42,10 +42,10 @@ async function request<T>(path: string, init: RequestInit, schema: z.ZodType<T>)
     const parsed = errorSchema.safeParse(payload);
     throw parsed.success
       ? new ApiRequestError(response.status, parsed.data.error.code, parsed.data.error.message)
-      : new ApiRequestError(response.status, 'unknown', `Error ${response.status} del servidor.`);
+      : new ApiRequestError(response.status, 'unknown', `Server error ${response.status}.`);
   }
   const parsed = schema.safeParse(payload);
-  if (!parsed.success) throw new ApiRequestError(response.status, 'bad_response', 'Respuesta inesperada del servidor.');
+  if (!parsed.success) throw new ApiRequestError(response.status, 'bad_response', 'Unexpected response from the server.');
   return parsed.data;
 }
 

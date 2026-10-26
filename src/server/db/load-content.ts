@@ -70,11 +70,11 @@ function parseRows<S extends z.ZodType>(
   table: string,
 ): z.infer<S>[] {
   const result = results[position];
-  if (result === undefined) throw new Error(`Falta el resultado de la consulta a ${table}.`);
+  if (result === undefined) throw new Error(`Missing the query result for ${table}.`);
   return result.results.map((row, rowNumber) => {
     const parsed = schema.safeParse(row);
     if (!parsed.success) {
-      throw new Error(`Fila ${rowNumber} de ${table} inválida: ${parsed.error.message}`);
+      throw new Error(`Invalid row ${rowNumber} in ${table}: ${parsed.error.message}`);
     }
     return parsed.data as z.infer<S>;
   });
@@ -237,9 +237,9 @@ export async function loadContentFromTables(db: D1Like, contentVersion: string):
 
 async function loadSnapshot(statement: ReturnType<D1Like['prepare']>, description: string): Promise<CyoaContent> {
   const row = await statement.first();
-  if (row === null) throw new Error(`No existe ${description}.`);
+  if (row === null) throw new Error(`There is no ${description}.`);
   const parsed = snapshotRow.safeParse(row);
-  if (!parsed.success) throw new Error(`Snapshot inválido para ${description}.`);
+  if (!parsed.success) throw new Error(`Invalid snapshot for ${description}.`);
   return loadContent(JSON.parse(parsed.data.snapshot) as unknown);
 }
 
@@ -247,7 +247,7 @@ async function loadSnapshot(statement: ReturnType<D1Like['prepare']>, descriptio
 export function loadCurrentContent(db: D1Like): Promise<CyoaContent> {
   return loadSnapshot(
     db.prepare('SELECT snapshot FROM content_versions WHERE is_current = 1'),
-    'una versión de contenido vigente',
+    'a current content version',
   );
 }
 
@@ -255,7 +255,7 @@ export function loadCurrentContent(db: D1Like): Promise<CyoaContent> {
 export function loadContentVersion(db: D1Like, version: string): Promise<CyoaContent> {
   return loadSnapshot(
     db.prepare('SELECT snapshot FROM content_versions WHERE version = ?').bind(version),
-    `la versión de contenido "${version}"`,
+    `content version "${version}"`,
   );
 }
 
@@ -274,7 +274,7 @@ async function readSnapshotText(statement: ReturnType<D1Like['prepare']>): Promi
   const row = await statement.first();
   if (row === null) return null;
   const parsed = versionedSnapshotRow.safeParse(row);
-  if (!parsed.success) throw new Error('Fila de content_versions inválida.');
+  if (!parsed.success) throw new Error('Invalid content_versions row.');
   return parsed.data;
 }
 

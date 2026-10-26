@@ -294,7 +294,6 @@ export function evaluateBuild(content: CyoaContent, selections: BuildSelections)
   /* ---- Attainments ---- */
   const rules = content.rules;
   const baseline = merged.attainmentBaseline;
-  const basePrice = baseline === null ? 0 : rules.attainmentCosts[baseline];
   const attainmentEntries = Object.entries(selections.attainments)
     .filter(([pathId]) => {
       if (index.pathOrder.has(pathId)) return true;
@@ -322,7 +321,7 @@ export function evaluateBuild(content: CyoaContent, selections: BuildSelections)
     const belowBaseline = baseline !== null && LEVEL_RANK[level] <= LEVEL_RANK[baseline];
     const price = belowBaseline
       ? 0
-      : Math.floor((rules.attainmentCosts[level] - basePrice) * merged.attainmentCostMultiplier);
+      : Math.floor(rules.attainmentCosts[level] * merged.attainmentCostMultiplier);
     attainmentLines.push({ kind: 'attainment', pathId, level, total: -price });
   }
 
@@ -466,7 +465,7 @@ export function evaluateBuild(content: CyoaContent, selections: BuildSelections)
       max: merged.removesAttainmentLimits ? null : (rules.attainmentLimits[level] ?? null),
       price: included
         ? null
-        : Math.floor((rules.attainmentCosts[level] - basePrice) * merged.attainmentCostMultiplier),
+        : Math.floor(rules.attainmentCosts[level] * merged.attainmentCostMultiplier),
     };
   };
   const attainment: AttainmentInfo = {

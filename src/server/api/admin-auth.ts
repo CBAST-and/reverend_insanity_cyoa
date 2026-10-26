@@ -24,18 +24,18 @@ export async function authenticateAdmin(request: Request, admin: AdminContext | 
   const accessConfigured = teamDomain !== '' && aud !== '';
 
   if (!keyConfigured && !accessConfigured) {
-    return deny(503, 'admin_not_configured', 'El administrador no está configurado.');
+    return deny(503, 'admin_not_configured', 'The admin area is not configured.');
   }
 
   const bearer = /^Bearer (\S+)$/.exec(request.headers.get('authorization') ?? '')?.[1];
   if (bearer !== undefined) {
-    if (!keyConfigured) return deny(401, 'key_not_accepted', 'Este sitio no usa clave de administrador.');
+    if (!keyConfigured) return deny(401, 'key_not_accepted', 'This site does not use an admin key.');
     // Se comparan los hashes: misma longitud siempre y tiempo constante.
     if (safeEqual(await hashToken(bearer), await hashToken(key))) {
       return { ok: true, email: 'clave de administrador' };
     }
-    console.warn('Intento de acceso al administrador con una clave incorrecta.');
-    return deny(403, 'invalid_key', 'La clave no es correcta.');
+    console.warn('Admin access attempt with a wrong key.');
+    return deny(403, 'invalid_key', 'The key is not correct.');
   }
 
   const jwt = request.headers.get('cf-access-jwt-assertion');
@@ -48,5 +48,5 @@ export async function authenticateAdmin(request: Request, admin: AdminContext | 
     return result.ok ? { ok: true, email: result.email } : deny(result.status, 'access_denied', result.reason);
   }
 
-  return deny(401, 'auth_required', 'Falta autenticación de administrador.');
+  return deny(401, 'auth_required', 'Admin authentication is required.');
 }

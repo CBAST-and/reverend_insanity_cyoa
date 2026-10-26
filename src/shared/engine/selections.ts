@@ -51,6 +51,6 @@ export function parseSelections(raw: unknown): ParseSelectionsResult {
   }
   return {
     ok: false,
-    errors: parsed.error.issues.map((issue) => `${issue.path.map(String).join('.') || '(raíz)'}: ${issue.message}`),
+    errors: parsed.error.issues.map((issue) => `${issue.path.map(String).join('.') || '(root)'}: ${issue.message}`),
   };
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026-10-23.1",
+  "contentVersion": "2026-10-25.1",
   "modes": [
     {
       "id": "venerable",
@@ -228,6 +228,37 @@
           "name": "Transhumanist",
           "description": "Human Path Dao Marks inscribe into you. You can no longer lose your sense of self or humanity and gain extreme resistance to anything that affects the mind. This allows permanent transformation into a beast, immersion in dream realms, or other experiences (or anything else really).",
           "cost": -200
+        },
+        {
+          "id": "trait-flawedsavant",
+          "name": "Flawed Savant",
+          "description": "You gain great grandmaster attainment in any path, 2x attainment growth in it and the necessary innate talent to eventually reach supreme grandmaster in it. However, you can never grow beyond master in any other path.",
+          "cost": -300
+        },
+        {
+          "id": "trait-masterofall",
+          "name": "Master of All",
+          "description": "You gain master attainment in every single path, including heaven, human, dream and pill path. In addition, you can recognize every Gu worm and immortal material.",
+          "cost": -300
+        },
+        {
+          "id": "trait-humanqi",
+          "name": "Overflowing Human Qi",
+          "description": "You have unusually high human qi, letting you more easily ascend to Gu Immortal and guaranteeing a high-grade immortal aperture. This also gives you 2x faster attainment growth in human path and qi path.",
+          "cost": -200
+        },
+        {
+          "id": "trait-extragu",
+          "name": "Extra Gu Worm",
+          "description": "Should you pass your immortal ascension, you gain an extra non-premium rank 6 immortal Gu of your choice. It may be of any path. You may take this multiple times.",
+          "cost": -100,
+          "repeatable": true
+        },
+        {
+          "id": "trait-mercantile",
+          "name": "Mercantile Soul",
+          "description": "You can access Treasure Yellow Heaven at all times, possessing a divine sense even at rank 1. Goods you purchase or sell will be moved through portals in the outside world, if you have no immortal aperture. These portals open slowly and have no combat utility.",
+          "cost": -50
         }
       ]
     },
@@ -235,6 +266,15 @@
       "title": "Clan Tier",
       "description": "You may freely choose which of the five regions you are born into. You may choose any tier of clan and additionally choose which status you are born into in that clan. If you choose the central continent, you will be born to a sect member instead of in a clan. You may choose to be born into any clan/sect from the story or to be born into one at random according to the chosen criteria.",
       "options": [
+        {
+          "id": "clan-dropin",
+          "name": "Drop-in",
+          "description": "You aren't reborn but teleport instantly over to the Gu world as you are now, without any kind of affiliation or background. You have an unopened aperture and emerge near a random human force. Everyone, including you, speaks Chinese.",
+          "cost": 250,
+          "conflicts": [
+            "birth-custom-immortal"
+          ]
+        },
         {
           "id": "clan-mortal",
           "name": "Mortal Village",
@@ -940,6 +980,18 @@
           "name": "Dang Hun Gu",
           "description": "Soul Path: A reusable Gu. Upon use, this gu expends soul foundation to create Guts gu at a significantly worse rate than Dang Hun Mountain. Using this gu consumes soul foundation instead of Primeval Essence.",
           "cost": -200
+        },
+        {
+          "id": "premium-worldmap",
+          "name": "World Map",
+          "description": "Information Path: Reveals a huge amount of information on one's surroundings, including the location of wild immortal Gu, beasts, materials, inheritances and immortals. Rank 6 Treasure Map can only find rank 6 entities or below within a local area like a sea area or an Earth Trench. Rank 7 works on rank 7 throughout a Region. Rank 8 covers the Gu world; rank 9 covers the Gu world plus all grotto-heavens and secluded domains.",
+          "cost": -200
+        },
+        {
+          "id": "premium-almanac",
+          "name": "Supreme Almanac",
+          "description": "Information Path: Contains every recipe for every non-premium mortal and immortal Gu. If anyone living or dead knows a Gu recipe, it will be inscribed on this Gu worm. Updates automatically when used. Rank 6 Almanac can only provide recipes for rank 6 Gu and below, rank 7 for rank 7, and so on.",
+          "cost": -350
         }
       ]
     },
@@ -1135,6 +1187,12 @@
           "name": "Filial Promise",
           "description": "You may not attack a human or variant human with the intent to kill.",
           "cost": 300
+        },
+        {
+          "id": "draw-benefitsaddict",
+          "name": "Benefits Addict",
+          "description": "You become excessively greedy. While this increases your will to fight and work hard, it also makes you more of a risk-taker and somewhat more easily manipulated (bribery). You are unwilling to sacrifice your wealth.",
+          "cost": 150
         }
       ]
     }

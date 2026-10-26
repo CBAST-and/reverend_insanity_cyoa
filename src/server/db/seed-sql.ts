@@ -199,7 +199,7 @@ export function buildSeedStatements(content: CyoaContent): string[] {
     const bytes = new TextEncoder().encode(statement).length;
     if (bytes > MAX_STATEMENT_BYTES) {
       throw new Error(
-        `Una sentencia del seed pesa ${bytes} bytes y D1 admite 100000 por sentencia: ${statement.slice(0, 80)}...`,
+        `A seed statement weighs ${bytes} bytes and D1 allows 100000 per statement: ${statement.slice(0, 80)}...`,
       );
     }
   }

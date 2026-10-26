@@ -35,15 +35,29 @@ siempre con `evaluateBuild(content, selections)`. Guardar, recargar, importar o
 validar en el servidor da el mismo resultado por construcción. Las reglas
 viven en una sola función; `applyAction` y `normalizeSelections` la reutilizan.
 
-## Reglas confirmadas con el texto del propio contenido
+## Reglas (confirmadas con el texto de la versión Expanded del CYOA)
 
 - Costo positivo otorga puntos; negativo los gasta.
-- **Tier 5:** "Each additional Tier 5 perk after first costs +200 CP extra" ->
-  recargo plano de 200 por perk adicional (la versión anterior cobraba 200, 400, 600...).
-- **Small Dream:** Master gratis en todos los caminos, sin límites de
-  Grandmaster/Great Grandmaster y precio de attainments a la mitad.
-- **Giant Sun:** "all options in the 'Luck' category for free".
+- **Tier 5:** "Each additional rank 5 perk from the first chosen one cost 200 additional CP" -> recargo plano de 200 por perk adicional.
+- **Small Dream:** Master en todos los caminos, sin límites de Grandmaster/Great Grandmaster y "the price of buying
+  attainment is halved" -> con el efecto, Grandmaster cuesta 50 y Great Grandmaster 100 (mitad del precio de lista).
+- **Giant Sun:** "You receive all options in the 'Luck' category for free".
 - Los efectos son datos (`effects` en cada opción), no ids fijos en el código.
+
+## Supuestos que siguen sin confirmar
+
+1. Giant Sun regala también las Luck con desventaja (Nemesis, Horizon) a costo 0, sin darte sus puntos: es la lectura
+   literal de "for free", y el texto no aclara ese caso.
+2. El campo de texto de "padres inmortales" es opcional (`input.required: false`).
+3. Pasarse del presupuesto es una advertencia, no un error: el build se puede guardar.
+4. Los límites de Grandmaster (4) y Great Grandmaster (2) cuentan por nivel exacto.
+
+## Fuente del contenido
+
+`content/content.json` es hoy la fuente de verdad y se edita a mano (o con el admin). El script
+`scripts/convert-legacy-data.ts` solo sirvió para la migración inicial desde `data.js`.
+Las opciones de alphanumericsprawl (que parte de 20 puntos) se escalan x50 para llegar a 1000.
+Los ids de camino van en minúscula; la interfaz los muestra como "Blood Path" (`src/web/labels.ts`).
 
 ## Supuestos a confirmar contra el CYOA original
 

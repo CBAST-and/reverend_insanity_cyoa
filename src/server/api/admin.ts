@@ -31,7 +31,7 @@ async function currentContent(db: D1Like): Promise<CyoaContent | null> {
 
 export async function getDraft(db: D1Like): Promise<ApiResult<DraftView>> {
   const current = await currentContent(db);
-  if (current === null) return fail(503, 'content_unavailable', 'Todavía no hay una versión de contenido publicada.');
+  if (current === null) return fail(503, 'content_unavailable', 'No content version has been published yet.');
   const draft = await loadContentFromTables(db, current.contentVersion);
   return {
     ok: true,
@@ -49,12 +49,12 @@ const patchSchema = z
     cost: z.number().int().min(-100_000).max(100_000).optional(),
   })
   .strict()
-  .refine((value) => Object.keys(value).length > 0, 'Se necesita al menos un campo.');
+  .refine((value) => Object.keys(value).length > 0, 'At least one field is required.');
 
 export async function patchOption(db: D1Like, id: string, raw: unknown): Promise<ApiResult<{ id: string }>> {
   const parsed = patchSchema.safeParse(raw);
   if (!parsed.success) {
-    return fail(400, 'invalid_patch', `Cambios no válidos: ${parsed.error.issues.map((issue) => issue.message).join('; ')}`);
+    return fail(400, 'invalid_patch', `Invalid changes: ${parsed.error.issues.map((issue) => issue.message).join('; ')}`);
   }
 
   const sets: string[] = [];
@@ -76,7 +76,7 @@ export async function patchOption(db: D1Like, id: string, raw: unknown): Promise
     .prepare(`UPDATE options SET ${sets.join(', ')} WHERE id = ? RETURNING id`)
     .bind(...values, id)
     .first();
-  return updated === null ? fail(404, 'option_not_found', 'Esa opción no existe.') : { ok: true, status: 200, body: { id } };
+  return updated === null ? fail(404, 'option_not_found', 'That option does not exist.') : { ok: true, status: 200, body: { id } };
 }
 
 /* ------------------------------ Publicar ------------------------------ */
@@ -92,21 +92,21 @@ async function nextVersion(db: D1Like, now: Date): Promise<string> {
     const existing = await db.prepare('SELECT 1 AS found FROM content_versions WHERE version = ?').bind(candidate).first();
     if (existing === null) return candidate;
   }
-  throw new Error('No se pudo asignar un número de versión.');
+  throw new Error('Could not assign a version number.');
 }
 
 export async function publishDraft(db: D1Like, now: Date): Promise<ApiResult<PublishedVersion>> {
   const current = await currentContent(db);
-  if (current === null) return fail(503, 'content_unavailable', 'Todavía no hay una versión de contenido publicada.');
+  if (current === null) return fail(503, 'content_unavailable', 'No content version has been published yet.');
 
   const version = await nextVersion(db, now);
   let draft: CyoaContent;
   try {
     draft = await loadContentFromTables(db, version);
   } catch (error) {
-    return fail(422, 'invalid_content', error instanceof Error ? error.message : 'El borrador no es un contenido válido.');
+    return fail(422, 'invalid_content', error instanceof Error ? error.message : 'The draft is not valid content.');
   }
-  if (sameContent(draft, current)) return fail(409, 'no_changes', 'No hay cambios para publicar.');
+  if (sameContent(draft, current)) return fail(409, 'no_changes', 'There are no changes to publish.');
 
   // Atómico: la versión anterior deja de ser la vigente en la misma transacción.
   await db.batch([

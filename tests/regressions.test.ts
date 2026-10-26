@@ -146,9 +146,9 @@ describe('Small Dream (tier5-dreamven)', () => {
     expect(expectError(attain('fire', 'master'), selections).code).toBe('attainment_below_baseline');
   });
 
-  it('cobra la mitad de la diferencia sobre el Master incluido', () => {
+  it('cobra la mitad del precio de lista de cada nivel (Grandmaster 50, Great Grandmaster 100)', () => {
     const { selections } = run([attain('fire', 'grandmaster'), attain('water', 'greatgrandmaster')], withDream());
-    expect(evaluate(selections).availablePoints).toBe(10000 - 150 - 25 - 75);
+    expect(evaluate(selections).availablePoints).toBe(10000 - 150 - 50 - 100);
   });
 
   it('quita los límites de Grandmaster', () => {
@@ -157,7 +157,7 @@ describe('Small Dream (tier5-dreamven)', () => {
       withDream(),
     );
     expect(evaluate(selections).valid).toBe(true);
-    expect(evaluate(selections).availablePoints).toBe(10000 - 150 - 6 * 25);
+    expect(evaluate(selections).availablePoints).toBe(10000 - 150 - 6 * 50);
   });
 
   it('al elegirlo, descarta los Master que ya se habían comprado', () => {

@@ -10,7 +10,7 @@ export class ContentError extends Error {
   readonly problems: readonly string[];
 
   constructor(problems: readonly string[]) {
-    super(`Contenido inválido (${problems.length} problema${problems.length === 1 ? '' : 's'}):\n- ${problems.join('\n- ')}`);
+    super(`Invalid content (${problems.length} problem${problems.length === 1 ? '' : 's'}):\n- ${problems.join('\n- ')}`);
     this.name = 'ContentError';
     this.problems = problems;
   }
@@ -46,7 +46,7 @@ function findIntegrityProblems(content: CyoaContent): string[] {
   const claimId = (id: string, where: string): void => {
     const previous = allIds.get(id);
     if (previous !== undefined) {
-      problems.push(`El id "${id}" se repite (${previous} y ${where}).`);
+      problems.push(`The id "${id}" is repeated (${previous} and ${where}).`);
     } else {
       allIds.set(id, where);
     }
@@ -73,48 +73,48 @@ function findIntegrityProblems(content: CyoaContent): string[] {
       const where = `${key}/${option.id}`;
 
       for (const ref of option.requires ?? []) {
-        if (!optionIds.has(ref)) problems.push(`${where}: requires "${ref}", que no existe.`);
-        if (ref === option.id) problems.push(`${where}: se requiere a sí misma.`);
+        if (!optionIds.has(ref)) problems.push(`${where}: requires "${ref}", which does not exist.`);
+        if (ref === option.id) problems.push(`${where}: requires itself.`);
       }
       for (const ref of option.conflicts ?? []) {
-        if (!optionIds.has(ref)) problems.push(`${where}: conflicts con "${ref}", que no existe.`);
-        if (ref === option.id) problems.push(`${where}: entra en conflicto consigo misma.`);
+        if (!optionIds.has(ref)) problems.push(`${where}: conflicts con "${ref}", which does not exist.`);
+        if (ref === option.id) problems.push(`${where}: conflicts with itself.`);
       }
 
       if (option.maxCount !== undefined && !option.repeatable) {
-        problems.push(`${where}: maxCount solo aplica a opciones repetibles.`);
+        problems.push(`${where}: maxCount only applies to repeatable options.`);
       }
       if (single && option.repeatable) {
-        problems.push(`${where}: una categoría de selección única no admite opciones repetibles.`);
+        problems.push(`${where}: a single-choice category cannot have repeatable options.`);
       }
       if (option.picks !== undefined && key !== 'grabBagBundles') {
-        problems.push(`${where}: picks solo aplica a Grab Bag Bundles.`);
+        problems.push(`${where}: picks only applies to Grab Bag Bundles.`);
       }
       if (key === 'grabBagBundles' && option.picks === undefined) {
-        problems.push(`${where}: todo bundle de Grab Bag debe definir picks.`);
+        problems.push(`${where}: every Grab Bag bundle must define picks.`);
       }
       if (option.statuses !== undefined && key !== 'clanTier') {
-        problems.push(`${where}: statuses solo aplica a Clan Tier.`);
+        problems.push(`${where}: statuses only applies to Clan Tier.`);
       }
     }
   }
 
   const modeIds = new Set<string>();
   for (const mode of content.modes) {
-    if (modeIds.has(mode.id)) problems.push(`Modo de dificultad repetido: "${mode.id}".`);
+    if (modeIds.has(mode.id)) problems.push(`Repeated difficulty mode: "${mode.id}".`);
     modeIds.add(mode.id);
   }
 
   const pathIds = new Set<string>();
   for (const path of content.paths) {
-    if (pathIds.has(path)) problems.push(`Camino repetido: "${path}".`);
+    if (pathIds.has(path)) problems.push(`Repeated path: "${path}".`);
     pathIds.add(path);
   }
 
   const surchargeCategories = new Set<string>();
   for (const rule of content.rules.categorySurcharges) {
     if (surchargeCategories.has(rule.category)) {
-      problems.push(`Hay dos recargos definidos para la categoría "${rule.category}".`);
+      problems.push(`Two surcharges are defined for the category "${rule.category}".`);
     }
     surchargeCategories.add(rule.category);
   }

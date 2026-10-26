@@ -51,7 +51,7 @@ const jwksCache = new Map<string, { readonly keys: readonly Jwk[]; readonly fetc
 export const defaultDeps: AccessDeps = {
   fetchJwks: async (url) => {
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`No se pudieron obtener las claves de Access (${response.status}).`);
+    if (!response.ok) throw new Error(`Could not fetch the Access signing keys (${response.status}).`);
     return response.json() as Promise<unknown>;
   },
   now: () => Date.now(),
@@ -87,20 +87,20 @@ export async function verifyAccessJwt(
   config: AccessConfig,
   deps: AccessDeps = defaultDeps,
 ): Promise<AccessResult> {
-  if (token === null || token === '') return { ok: false, status: 401, reason: 'Falta el token de Access.' };
+  if (token === null || token === '') return { ok: false, status: 401, reason: 'Missing Access token.' };
 
   const parts = token.split('.');
   const [encodedHeader, encodedPayload, encodedSignature] = parts;
   if (parts.length !== 3 || encodedHeader === undefined || encodedPayload === undefined || encodedSignature === undefined) {
-    return { ok: false, status: 401, reason: 'Token mal formado.' };
+    return { ok: false, status: 401, reason: 'Malformed token.' };
   }
 
   try {
     const header = headerSchema.parse(decodeJson(encodedHeader));
-    if (header.alg !== 'RS256') return { ok: false, status: 403, reason: 'Algoritmo no permitido.' };
+    if (header.alg !== 'RS256') return { ok: false, status: 403, reason: 'Algorithm not allowed.' };
 
     const jwk = await findKey(config, deps, header.kid);
-    if (jwk === null) return { ok: false, status: 403, reason: 'Clave de firma desconocida.' };
+    if (jwk === null) return { ok: false, status: 403, reason: 'Unknown signing key.' };
 
     const key = await crypto.subtle.importKey(
       'jwk',
@@ -115,22 +115,22 @@ export async function verifyAccessJwt(
       decodeBase64Url(encodedSignature),
       new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`),
     );
-    if (!signatureValid) return { ok: false, status: 403, reason: 'Firma inválida.' };
+    if (!signatureValid) return { ok: false, status: 403, reason: 'Invalid signature.' };
 
     const payload = payloadSchema.parse(decodeJson(encodedPayload));
     const nowSeconds = Math.floor(deps.now() / 1000);
     const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
 
     if (payload.iss !== `https://${normalizeDomain(config.teamDomain)}`) {
-      return { ok: false, status: 403, reason: 'Emisor no válido.' };
+      return { ok: false, status: 403, reason: 'Invalid issuer.' };
     }
-    if (!audiences.includes(config.aud)) return { ok: false, status: 403, reason: 'Audiencia no válida.' };
-    if (payload.exp <= nowSeconds) return { ok: false, status: 403, reason: 'Token vencido.' };
-    if (payload.nbf !== undefined && payload.nbf > nowSeconds) return { ok: false, status: 403, reason: 'Token aún no válido.' };
+    if (!audiences.includes(config.aud)) return { ok: false, status: 403, reason: 'Invalid audience.' };
+    if (payload.exp <= nowSeconds) return { ok: false, status: 403, reason: 'Token expired.' };
+    if (payload.nbf !== undefined && payload.nbf > nowSeconds) return { ok: false, status: 403, reason: 'Token not valid yet.' };
 
     return { ok: true, email: payload.email ?? 'service-token' };
   } catch {
-    return { ok: false, status: 401, reason: 'Token ilegible.' };
+    return { ok: false, status: 401, reason: 'Unreadable token.' };
   }
 }
 

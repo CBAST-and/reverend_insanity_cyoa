@@ -77,7 +77,7 @@ describe('Seed y carga del contenido', () => {
   it('cuenta lo esperado en cada tabla', () => {
     const db = seededDatabase();
     expect(count(db, 'categories')).toBe(21);
-    expect(count(db, 'options')).toBe(130);
+    expect(count(db, 'options')).toBe(139);
     expect(count(db, 'paths')).toBe(content.paths.length);
     expect(count(db, 'difficulty_modes')).toBe(4);
     expect(count(db, 'attainment_levels')).toBe(3);
@@ -100,7 +100,7 @@ describe('Seed y carga del contenido', () => {
     const db = seededDatabase(loadContent(tricky));
     const loaded = await loadContentFromTables(db, 'tricky.1');
     expect(loaded.categories.timeline.options[0]?.description).toBe(option.description);
-    expect(count(db, 'options')).toBe(130);
+    expect(count(db, 'options')).toBe(139);
   });
 
   it('sqlText escribe cada sentencia en una sola línea', () => {
@@ -116,7 +116,7 @@ describe('Seed y carga del contenido', () => {
 
     db.raw.exec(buildSeedSql(content));
 
-    expect(count(db, 'options')).toBe(130);
+    expect(count(db, 'options')).toBe(139);
     expect(count(db, 'content_versions')).toBe(1);
     expect(count(db, 'builds')).toBe(1);
     expect(await loadContentFromTables(db, content.contentVersion)).toStrictEqual(content);
@@ -152,7 +152,7 @@ describe('Seed y carga del contenido', () => {
     await expect(loadContentFromTables(badEffects, 'x')).rejects.toThrow();
 
     const unseeded = createMigratedDatabase();
-    await expect(loadCurrentContent(unseeded)).rejects.toThrow(/vigente/);
+    await expect(loadCurrentContent(unseeded)).rejects.toThrow(/current content version/);
   });
 });
 

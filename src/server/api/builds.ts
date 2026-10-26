@@ -73,13 +73,13 @@ function validateSelections(
   if (!parsed.ok) {
     return {
       ok: false,
-      result: fail(400, 'invalid_selections', `Las selecciones no tienen el formato esperado: ${parsed.errors.slice(0, 5).join('; ')}`),
+      result: fail(400, 'invalid_selections', `The selections do not have the expected format: ${parsed.errors.slice(0, 5).join('; ')}`),
     };
   }
 
   const errors = evaluateBuild(content, parsed.selections).issues.filter((issue) => issue.severity === 'error');
   if (errors.length > 0) {
-    return { ok: false, result: fail(422, 'invalid_build', 'El build incumple las reglas.', errors) };
+    return { ok: false, result: fail(422, 'invalid_build', 'The build breaks the rules.', errors) };
   }
 
   // Se guarda la versión canónica: sin texto libre de opciones que ya no están elegidas.
@@ -102,7 +102,7 @@ export async function createBuild(
   try {
     content = await loadCurrentContent(db);
   } catch {
-    return fail(503, 'content_unavailable', 'Todavía no hay una versión de contenido publicada.');
+    return fail(503, 'content_unavailable', 'No content version has been published yet.');
   }
 
   const validated = validateSelections(content, rawSelections);
@@ -126,7 +126,7 @@ export async function createBuild(
       if (!isUniqueViolation(error)) throw error;
     }
   }
-  return fail(503, 'id_collision', 'No se pudo generar un identificador libre. Inténtalo de nuevo.');
+  return fail(503, 'id_collision', 'Could not generate a free identifier. Please try again.');
 }
 
 /* ========================================================================
@@ -149,16 +149,16 @@ async function findBuild(db: D1Like, id: string): Promise<z.infer<typeof buildRo
     .first();
   if (row === null) return null;
   const parsed = buildRow.safeParse(row);
-  if (!parsed.success) throw new Error(`Fila de builds inválida para ${id}.`);
+  if (!parsed.success) throw new Error(`Invalid builds row for ${id}.`);
   return parsed.data;
 }
 
 export async function getBuild(db: D1Like, id: string): Promise<ApiResult<BuildView>> {
   const row = await findBuild(db, id);
-  if (row === null) return fail(404, 'build_not_found', 'Ese build no existe.');
+  if (row === null) return fail(404, 'build_not_found', 'That build does not exist.');
 
   const parsed = parseSelections(JSON.parse(row.data) as unknown);
-  if (!parsed.ok) throw new Error(`Los datos guardados del build ${id} no son válidos.`);
+  if (!parsed.ok) throw new Error(`The stored data for build ${id} is not valid.`);
 
   return {
     ok: true,
@@ -183,12 +183,12 @@ export async function updateBuild(
   token: string | null,
   rawSelections: unknown,
 ): Promise<ApiResult<UpdatedBuild>> {
-  if (token === null) return fail(401, 'token_required', 'Falta el token de edición.');
+  if (token === null) return fail(401, 'token_required', 'The edit token is missing.');
 
   const row = await findBuild(db, id);
-  if (row === null) return fail(404, 'build_not_found', 'Ese build no existe.');
+  if (row === null) return fail(404, 'build_not_found', 'That build does not exist.');
   if (!safeEqual(await hashToken(token), row.edit_token_hash)) {
-    return fail(403, 'invalid_token', 'El token de edición no es válido para este build.');
+    return fail(403, 'invalid_token', 'The edit token is not valid for this build.');
   }
 
   // Se valida contra la versión de contenido con la que se creó el build.
@@ -196,7 +196,7 @@ export async function updateBuild(
   try {
     content = await loadContentVersion(db, row.content_version);
   } catch {
-    return fail(500, 'content_unavailable', 'No se encontró la versión de contenido de este build.');
+    return fail(500, 'content_unavailable', 'The content version for this build was not found.');
   }
 
   const validated = validateSelections(content, rawSelections);

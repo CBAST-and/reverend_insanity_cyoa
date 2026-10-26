@@ -12,7 +12,7 @@ const publishedSchema = z.object({ version: z.string() });
 const errorSchema = z.object({ error: z.object({ message: z.string() }) });
 const anySchema = z.unknown();
 
-const LOGIN_HINT = 'No se pudo hablar con el servidor. Revisa tu conexión o la clave de administrador.';
+const LOGIN_HINT = 'Could not reach the server. Check your connection or the admin key.';
 
 const KEY_STORAGE = 'ri-cyoa:admin-key';
 
@@ -108,19 +108,19 @@ function OptionEditor(props: {
     <div className="card" role="group" aria-label={option.id}>
       <span className="tag">{option.id}</span>
       <label className="desc">
-        Nombre
+        Name
         <input style={{ width: '100%' }} value={name} onChange={(event) => setName(event.target.value)} />
       </label>
       <label className="desc">
-        Costo (positivo da puntos)
+        Cost (positive gives points)
         <input type="number" step={1} value={cost} onChange={(event) => setCost(event.target.value)} />
       </label>
       <label className="desc">
-        Descripción
+        Description
         <textarea rows={5} style={{ width: '100%' }} value={description} onChange={(event) => setDescription(event.target.value)} />
       </label>
       <button type="button" className="chip" disabled={!dirty || saving} onClick={() => void save()}>
-        {saving ? 'Guardando…' : 'Guardar opción'}
+        {saving ? 'Saving…' : 'Save option'}
       </button>
     </div>
   );
@@ -163,20 +163,20 @@ export default function Admin(): ReactElement {
     writeKey(null);
     setDraft(null);
     setNeedsKey(true);
-    setNotice('Sesión cerrada.');
+    setNotice('Signed out.');
   };
 
   const saveOption = async (id: string, patch: OptionPatch): Promise<void> => {
     if (!Number.isInteger(patch.cost)) {
-      setNotice('El costo debe ser un número entero.');
+      setNotice('The cost must be a whole number.');
       return;
     }
     try {
       await adminRequest(`/api/admin/options/${encodeURIComponent(id)}`, 'PATCH', patch, anySchema);
       await load();
-      setNotice('Opción guardada en el borrador. Falta publicar para que la vean los usuarios.');
+      setNotice('Option saved to the draft. Publish it so visitors can see it.');
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : 'No se pudo guardar.');
+      setNotice(error instanceof Error ? error.message : 'Could not save.');
     }
   };
 
@@ -185,9 +185,9 @@ export default function Admin(): ReactElement {
     try {
       const result = await adminRequest('/api/admin/publish', 'POST', {}, publishedSchema);
       await load();
-      setNotice(`Publicado como versión ${result.version}.`);
+      setNotice(`Published as version ${result.version}.`);
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : 'No se pudo publicar.');
+      setNotice(error instanceof Error ? error.message : 'Could not publish.');
     } finally {
       setBusy(false);
     }
@@ -196,22 +196,22 @@ export default function Admin(): ReactElement {
   return (
     <>
       <header className="top">
-        <h1>Administrador</h1>
+        <h1>Admin</h1>
         {draft !== null && (
           <>
             <span className="desc">
-              {draft.email} · versión publicada {draft.version}
+              {draft.email}, published version {draft.version}
             </span>
             <div className="actions">
               <span className={draft.changed ? 'warn' : 'desc'}>
-                {draft.changed ? 'Hay cambios sin publicar' : 'Sin cambios pendientes'}
+                {draft.changed ? 'Unpublished changes' : 'No pending changes'}
               </span>
               <button type="button" className="chip" disabled={!draft.changed || busy} onClick={() => void publish()}>
-                Publicar
+                Publish
               </button>
               {readKey() !== null && (
                 <button type="button" className="chip" onClick={signOut}>
-                  Salir
+                  Sign out
                 </button>
               )}
             </div>
@@ -229,7 +229,7 @@ export default function Admin(): ReactElement {
             }}
           >
             <label className="desc">
-              Clave de administrador
+              Admin key
               <input
                 type="password"
                 autoComplete="current-password"
@@ -239,12 +239,12 @@ export default function Admin(): ReactElement {
               />
             </label>
             <button type="submit" className="chip" disabled={keyInput.trim().length === 0}>
-              Entrar
+              Sign in
             </button>
             {notice !== null && <span className="warn">{notice}</span>}
           </form>
         )}
-        {draft === null && !needsKey && <p className="desc">{notice ?? 'Cargando…'}</p>}
+        {draft === null && !needsKey && <p className="desc">{notice ?? 'Loading…'}</p>}
         {draft !== null &&
           CATEGORY_ORDER.map((key) => (
             <section key={key} aria-labelledby={`cat-${key}`}>
